@@ -1,11 +1,11 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { Environment, OrbitControls } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Suspense } from "react";
 import ExplodingBox from "@/app/components/ExplodingBox";
-import { Stars } from "@react-three/drei";
+// import { Stars } from "@react-three/drei";
 
 // function ClickableBox({ name, position, color }: { name: string; position: [number, number, number]; color: string }) {
 //   const handleClick = useCallback(() => {
@@ -31,7 +31,8 @@ export default function SceneCanvas() {
                 overflow: "hidden",
                 color: "var(--foreground)"
             }} gl={{ preserveDrawingBuffer: true }}>
-            <Stars
+            <Environment background files="/hdr/nebula.hdr"/>
+            {/* <Stars
                 radius={100}
                 depth={50}
                 count={1000}
@@ -39,7 +40,7 @@ export default function SceneCanvas() {
                 saturation={0}
                 fade
                 speed={1}
-            />
+            /> */}
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
             <OrbitControls />

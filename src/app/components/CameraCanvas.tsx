@@ -5,10 +5,11 @@ import * as THREE from 'three';
 import { useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useSpring, animated } from '@react-spring/three';
-import { OrbitControls } from '@react-three/drei';
+import { Environment, OrbitControls } from '@react-three/drei';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+// import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import optimer from 'three/examples/fonts/optimer_regular.typeface.json';
+import { Bloom, EffectComposer } from '@react-three/postprocessing';
 
 const shapeTypes = ['box', 'sphere', 'cone', 'torus'] as const;
 type ShapeType = typeof shapeTypes[number];
@@ -68,34 +69,29 @@ function MorphingScene() {
   const randomPositions = useMemo(() => getRandomPositions(COUNT), []);
   const colorPool = ['cyan', 'magenta', 'lime', 'orange', 'violet'];
 
-  const letterPositions = useMemo(() => {
-    const loader = new FontLoader();
-    const font = loader.parse(optimer);
+const letterPositions = useMemo(() => {
+  const loader = new FontLoader();
+  const font = loader.parse(optimer); // or any other loaded font
 
-    const geometry = new TextGeometry('Chintan', {
-      font,
-      size: 3,
-        depth: 0.01, // replaces height
-        bevelEnabled: false,
-      curveSegments: 4,
-    });
+  const shapes = font.generateShapes('Chintan', 3); // 'Chintan' at size 3
+  const geometry = new THREE.ShapeGeometry(shapes);
+  geometry.center();
 
-    geometry.center();
-    geometry.computeBoundingBox();
+  const posAttr = geometry.getAttribute('position');
+  const points: THREE.Vector3[] = [];
 
-    const nonIndexed = geometry.toNonIndexed();
-    const posAttr = nonIndexed.getAttribute('position');
-    const points: THREE.Vector3[] = [];
+  for (let i = 0; i < posAttr.count; i += Math.floor(posAttr.count / COUNT)) {
+    points.push(
+      new THREE.Vector3(
+        posAttr.getX(i),
+        posAttr.getY(i),
+        0 // flat Z
+      )
+    );
+  }
 
-    // only collect front-facing flat points (ignore depth)
-    for (let i = 0; i < posAttr.count; i += Math.floor(posAttr.count / COUNT)) {
-      const x = posAttr.getX(i);
-      const y = posAttr.getY(i);
-      points.push(new THREE.Vector3(x, y, 0));
-    }
-
-    return points;
-  }, [COUNT]);
+  return points;
+}, [COUNT]);
 
   return (
     <>
@@ -126,8 +122,19 @@ function MorphingScene() {
 
 export default function LetterMorphScene() {
   return (
-    <Canvas camera={{ position: [0, 0, 12], fov: 60 }}>
-      <OrbitControls />
+    <Canvas camera={{ position: [0, 0, 12], fov: 60 }} className="border-none rounded-xl" gl={{ preserveDrawingBuffer: true }}>
+       <color attach="background" args={['black']} />
+  <OrbitControls />
+
+  <Environment background files="/hdr/nebula.hdr"/>
+
+  {/* <Stars radius={250} depth={100} count={3000} factor={6} fade speed={0.8} /> */}
+  {/* <Sparkles count={100} size={1.5} scale={[60, 60, 60]} speed={1} /> */}
+
+  <EffectComposer>
+    {/* <DepthOfField focusDistance={0.01} focalLength={0.015} bokehScale={2.5} /> */}
+    <Bloom intensity={0.6} />
+  </EffectComposer>
       <MorphingScene />
     </Canvas>
   );
