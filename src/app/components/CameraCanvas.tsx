@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useSpring, animated } from '@react-spring/three';
-import { OrbitControls, Stars } from '@react-three/drei';
+import { Gltf, OrbitControls, Stars } from '@react-three/drei';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 // import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import optimer from 'three/examples/fonts/optimer_regular.typeface.json';
@@ -69,6 +69,7 @@ function MorphingScene() {
   const randomPositions = useMemo(() => getRandomPositions(COUNT), []);
   const colorPool = ['cyan', 'magenta', 'lime', 'orange', 'violet'];
 
+
 const letterPositions = useMemo(() => {
   const loader = new FontLoader();
   const font = loader.parse(optimer); // or any other loaded font
@@ -123,11 +124,12 @@ const letterPositions = useMemo(() => {
 export default function LetterMorphScene() {
   return (
     <Canvas camera={{ position: [0, 0, 12], fov: 60 }} className="border-none rounded-xl" gl={{ preserveDrawingBuffer: true }}>
-       <color attach="background" args={['black']} />
+       {/* <color attach="background" args={['black']} /> */}
   <OrbitControls />
 
   {/* <Environment background files="/hdr/nebula.hdr"/> */}
 
+<Gltf src="/scene.gltf" scale={[150, 150, 150]} position={[0,-5,1]}/>
   <Stars radius={250} depth={100} count={3000} factor={6} fade speed={0.8} />
   {/* <Sparkles count={100} size={1.5} scale={[60, 60, 60]} speed={1} /> */}
 
