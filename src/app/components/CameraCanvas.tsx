@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useSpring, animated } from '@react-spring/three';
-import { Environment, OrbitControls } from '@react-three/drei';
+import { OrbitControls, Stars } from '@react-three/drei';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 // import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import optimer from 'three/examples/fonts/optimer_regular.typeface.json';
@@ -126,9 +126,9 @@ export default function LetterMorphScene() {
        <color attach="background" args={['black']} />
   <OrbitControls />
 
-  <Environment background files="/hdr/nebula.hdr"/>
+  {/* <Environment background files="/hdr/nebula.hdr"/> */}
 
-  {/* <Stars radius={250} depth={100} count={3000} factor={6} fade speed={0.8} /> */}
+  <Stars radius={250} depth={100} count={3000} factor={6} fade speed={0.8} />
   {/* <Sparkles count={100} size={1.5} scale={[60, 60, 60]} speed={1} /> */}
 
   <EffectComposer>
