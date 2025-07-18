@@ -5,11 +5,15 @@ import { animated, useSpring } from "@react-spring/three";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
+import { Trail } from '@react-three/drei';
+import { useRouter } from 'next/navigation';
 
 type Props = {
     name: string;
     position: [number, number, number];
     color: string;
+    color2: string;
+    access:string;
     infoContent: React.ReactNode
 };
 
@@ -65,11 +69,29 @@ function ExplodingPiece({ from, to, color, delay, isReturning, shape }: PiecePro
 }
 
 
-export default function ExplodingBox({ position, color, infoContent }: Props) {
+export default function ExplodingBox({ position, color, infoContent,color2,access }: Props) {
     const [exploded, setExploded] = useState(false);
     const [piecesData, setPiecesData] = useState<PieceData[]>([]);
     const shapeTypes = ["box", "sphere", "cone", "torus", "octahedron", "cylinder"];
     const [isAnimating, setIsAnimating] = useState(false);
+    const [hovered, setHovered] = useState(false);
+    const orbitRef = useRef<THREE.Mesh>(null);
+    const router = useRouter();
+
+useFrame(({ clock }) => {
+      if (!orbitRef.current || hovered) return;
+
+  if (orbitRef.current && !exploded) {
+    const t = clock.getElapsedTime()/2;
+    const radius = 1.5;
+    orbitRef.current.position.set(
+      position[0] + radius * Math.cos(t),
+      position[1] + radius * Math.cos(t),
+      position[2] + radius * Math.sin(t)
+    );
+  }
+});
+
 
     const handleClick = () => {
         if (isAnimating) return;
@@ -114,6 +136,36 @@ export default function ExplodingBox({ position, color, infoContent }: Props) {
 
     return (
         <>
+{!exploded && (
+  <Trail
+    width={5}
+    length={10}
+    color={color2}
+    attenuation={(t) => t * t}
+  >
+    <mesh
+      ref={orbitRef}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(true);
+        // document.body.style.cursor = 'pointer';
+      }}
+      onPointerOut={() => {
+        setHovered(false);
+        // document.body.style.cursor = 'default';
+      }}
+      onClick={() => {
+        router.push(`${access}`); // Change to your desired route
+      }}
+    >
+      <sphereGeometry args={[0.1, 16, 16]} />
+      <meshStandardMaterial color={color2} emissive="cyan" emissiveIntensity={1} />
+    </mesh>
+  </Trail>
+)}
+
+
+
             {/* Only show the cube when it's not exploded and animation is over */}
             {!exploded && !isAnimating && piecesData.length === 0 && (
                 <mesh position={position} onClick={handleClick}>

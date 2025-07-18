@@ -50,20 +50,20 @@ export default function SceneCanvas() {
                     <p>Radhe Radhe!! This is my new project of 3D portFolio😄
                         .</p>
                 </>
-            } />
+            } color2="cyan" access="/three-projects"/>
             <ExplodingBox name="About Me" position={[3, 0, -1]} color="#00ffff" infoContent={
                 <>
                     <h3><b>Chintu</b></h3>
                     <p>I&apos;m a trainee developer working with ThreeJS also a Frontend Dev🙂‍↔
                         .</p>
                 </>
-            } />
+            } color2="white" access="/about"/>
             <ExplodingBox name="Contact Me" position={[0, 0, 3]} color="#7fff00" infoContent={
                 <>
                     <h3><b>Contact</b></h3>
                     <p>Checkout my Instagram : WebDevChintuworks😅! No promotions just watch fun projects and enjoy.</p>
                 </>
-            } />
+            } color2="yellow" access="/projects"/>
             <EffectComposer>
                 <Bloom intensity={1.5} luminanceThreshold={0.2} />
             </EffectComposer>
