@@ -77,17 +77,28 @@ export default function ExplodingBox({ position, color, infoContent,color2,acces
     const [hovered, setHovered] = useState(false);
     const orbitRef = useRef<THREE.Mesh>(null);
     const router = useRouter();
+    const { orbitSpeed } = useSpring({
+  orbitSpeed: hovered ? 0 : 1,
+  config: { mass: 1, tension: 120, friction: 14 },
+});
 
-useFrame(({ clock }) => {
-      if (!orbitRef.current || hovered) return;
+    const angleRef = useRef(0);
+
+useFrame((_,delta) => {
+  if (!orbitRef.current) return;
+
+  // update angle only if not hovered
+  if (!hovered) {
+    angleRef.current += delta * orbitSpeed.get();
+  }
 
   if (orbitRef.current && !exploded) {
-    const t = clock.getElapsedTime()/2;
+    // const t = clock.getElapsedTime()/2;
     const radius = 1.5;
     orbitRef.current.position.set(
-      position[0] + radius * Math.cos(t),
-      position[1] + radius * Math.cos(t),
-      position[2] + radius * Math.sin(t)
+      position[0] + radius * Math.cos(angleRef.current),
+      position[1] + radius * Math.cos(angleRef.current),
+      position[2] + radius * Math.sin(angleRef.current)
     );
   }
 });
@@ -159,7 +170,7 @@ useFrame(({ clock }) => {
       }}
     >
       <sphereGeometry args={[0.1, 16, 16]} />
-      <meshStandardMaterial color={color2} emissive="cyan" emissiveIntensity={1} />
+      <meshStandardMaterial color={color2} emissive="cyan" emissiveIntensity={1}/>
     </mesh>
   </Trail>
 )}
