@@ -19,11 +19,11 @@ const projects = [
     link: 'https://adviz-portal-fe.vercel.app/',
   },
   {
-    title: '📊 CodeInbound - Survey Form Builder',
-    role: 'Freelancer Project',
-    tech: 'React, Custom Forms, Deployment',
-    description: 'Developed a secure React-based dynamic survey form system. Supported multiple question types, validation ranges, and client-side editing for B2B survey deployment.',
-    link: null,
+    title: 'Markencr - Startup Website',
+    role: 'Primary Developer',
+    tech: 'Next, JavaScript, Locomotive Scroll, Tailwind CSS, Vercel',
+    description: 'A freelance Project,a startup focused on UI design services for client websites, Worked closely with their design team to build a responsive UI based on provided mockups, and integrated TopMate for client communication.',
+    link: 'https://www.markencr.com/',
   },
 ];
 

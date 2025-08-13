@@ -74,7 +74,7 @@ export default function Navbar() {
 
   {/* Mobile Sidebar */}
   {isOpen && (
-    <div className="lg:hidden bg-black/80 backdrop-blur-md absolute top-full left-0 w-full px-6 py-4 space-y-4 text-white">
+    <div className="lg:hidden bg-black backdrop-blur-md absolute top-full left-0 w-full px-6 py-4 space-y-4 text-white">
       {navItems.map((item) => {
         const isActive = pathname === item.href;
         return (
