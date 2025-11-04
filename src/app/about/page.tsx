@@ -29,7 +29,7 @@ export default function HomeContent() {
   ];
 
   return (
-    <div className="pt-20 min-h-screen ms-10">
+    <div className="min-h-screen ms-10">
 
       <div className="mb-8">
         <div className="max-w-4xl">

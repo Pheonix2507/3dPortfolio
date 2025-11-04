@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 // import { usePathname } from "next/navigation";
 import { Share_Tech_Mono } from 'next/font/google';
+import ScrollController from "./components/ScrollController";
 
 const shareTechMono = Share_Tech_Mono({
   weight: '400',
@@ -36,19 +37,11 @@ export default function RootLayout({
       <body
         className={`${shareTechMono.variable} ${shareTechMono.variable} mono-header antialiased`}
       >
-      <Navbar />
-         {/* <AnimatePresence mode="wait">
-      <motion.div
-        key={pathname}
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="relative z-10"
-      >
+        <ScrollController>
 
-      </motion.div>
-    </AnimatePresence> */}
+      <Navbar />
             {children}
+      </ScrollController>
       </body>
     </html>
   );

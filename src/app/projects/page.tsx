@@ -28,15 +28,15 @@ const projects = [
       'Startup focused on UI design services. Built responsive UI from mockups and integrated TopMate for client communication.',
     link: 'https://www.markencr.com/',
   },
-  
+
 ];
 
 export default function ProjectsContent() {
   return (
-    <div className="pt-24 px-6 min-h-screen text-white">
-      <h1 className="text-4xl font-bold mb-10">My Projects</h1>
+    <div className="pt-24 px-6 text-white space-y-10">
+      <h1 className="text-4xl font-bold">My Projects</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-15 place-items-center">
         {projects.map((project, index) => (
           <motion.div
             key={index}
