@@ -23,8 +23,8 @@
   }
 }
 
-main,body {
-  background: linear-gradient(135deg, #191921, #0e0d1f, #0e0e1a);
+main,body,.work {
+  background: linear-gradient(90deg, #19192b, #4a4865, #0e0e1a);
 }
 
 @import "tailwindcss";
@@ -148,6 +148,35 @@ main,body {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
+
+/* 3D Parallax Card Effect */
+.parallax-card {
+  --f: 0.05; /* smaller = gentler 3D */
+  --r: 16px; /* corner radius */
+  --_f: calc(100% * var(--f) / (1 + var(--f)));
+  --_a: calc(90deg * var(--f));
+  
+  perspective: 800px;
+  width: 100%;
+  max-width: 350px;
+  transition: transform 0.3s ease-out, clip-path 0.5s ease;
+}
+
+.parallax-card > .relative {
+  clip-path: inset(0 var(--_f) 0 0 round var(--r));
+  transform: perspective(600px) rotateY(var(--_a));
+  transition: transform 0.6s ease, clip-path 0.6s ease;
+}
+
+.parallax-card:hover > .relative {
+  clip-path: inset(0 0 0 var(--_f) round var(--r));
+  transform: perspective(600px)
+    translateX(calc(-1 * var(--_f)))
+    rotateY(calc(-1 * var(--_a)));
+  box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+}
+
+
 
 @layer base {
   * {

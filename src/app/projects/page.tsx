@@ -8,23 +8,27 @@ const projects = [
     title: '🎉 Event Site for Synapse (DAIICT)',
     role: 'Frontend Developer',
     tech: 'React, Node JS, Tailwind CSS, GSAP, TypeScript, AWS, Vercel',
-    description: 'Implemented UI features dynamically based on ongoing feedback from the designer. Collaborated effectively with a cross-functional team to complete the site within 2 to 3 weeks.Handled the main GitHub Page which was deployed and worked as on the call of the UI designer.',
+    description:
+      'Implemented UI features dynamically based on ongoing feedback from the designer. Collaborated effectively with a cross-functional team to complete the site within 2 to 3 weeks.',
     link: 'https://www.synapse-daiict.co.in/',
   },
   {
     title: 'Vahaan Record Portal',
     role: 'Frontend Developer',
     tech: 'React, TailWind CSS, ShadCN UI, NestJS, SQL, TypeScript, Vercel, Render',
-    description: 'This was a freelance project, I with one backend developer hosted the whole site in 2 months of work. It is a three way panelling system one for Superadmin, 2 other for employee and external clients respectively. It includes creating detailed forms editing them properly, mangaing the payments, tasks etc.',
+    description:
+      'Freelance project with one backend developer. Three-panel system for Superadmin, Employee, and Clients with forms, payments, and task management.',
     link: 'https://adviz-portal-fe.vercel.app/',
   },
   {
     title: 'Markencr - Startup Website',
     role: 'Primary Developer',
     tech: 'Next, JavaScript, Locomotive Scroll, Tailwind CSS, Vercel',
-    description: 'A freelance Project,a startup focused on UI design services for client websites, Worked closely with their design team to build a responsive UI based on provided mockups, and integrated TopMate for client communication.',
+    description:
+      'Startup focused on UI design services. Built responsive UI from mockups and integrated TopMate for client communication.',
     link: 'https://www.markencr.com/',
   },
+  
 ];
 
 export default function ProjectsContent() {
@@ -32,7 +36,7 @@ export default function ProjectsContent() {
     <div className="pt-24 px-6 min-h-screen text-white">
       <h1 className="text-4xl font-bold mb-10">My Projects</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
         {projects.map((project, index) => (
           <motion.div
             key={index}
@@ -41,21 +45,27 @@ export default function ProjectsContent() {
             viewport={{ once: true }}
             transition={{ delay: index * 0.15, duration: 0.5, ease: 'easeOut' }}
           >
-            <Card className="bg-white/5 border border-white/10 backdrop-blur-lg shadow-lg hover:shadow-cyan-500/20 transition duration-300">
-              <CardHeader>
-                <CardTitle className="text-cyan-300">{project.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-gray-300 space-y-2">
-                <p><strong>Role:</strong> {project.role}</p>
-                <p><strong>Tech Stack:</strong> {project.tech}</p>
-                <p>{project.description}</p>
-                {project.link && (
-                  <a href={project.link} className="text-cyan-400 underline text-sm" target="_blank">
-                    View Project
-                  </a>
-                )}
-              </CardContent>
-            </Card>
+            <div className="parallax-card">
+              <Card className="relative bg-white/5 border border-white/10 backdrop-blur-lg shadow-lg transition-all duration-500">
+                <CardHeader>
+                  <CardTitle className="text-cyan-300">{project.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-gray-300 space-y-2">
+                  <p><strong>Role:</strong> {project.role}</p>
+                  <p><strong>Tech Stack:</strong> {project.tech}</p>
+                  <p>{project.description}</p>
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      className="text-cyan-400 underline text-sm"
+                      target="_blank"
+                    >
+                      View Project
+                    </a>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </motion.div>
         ))}
       </div>
