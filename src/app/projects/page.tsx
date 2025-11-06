@@ -26,7 +26,7 @@ const projects = [
     tech: 'Next, JavaScript, Locomotive Scroll, Tailwind CSS, Vercel',
     description:
       'Startup focused on UI design services. Built responsive UI from mockups and integrated TopMate for client communication.',
-    link: 'https://www.markencr.com/',
+    link: 'https://markencr-test.vercel.app/',
   },
 
 ];
