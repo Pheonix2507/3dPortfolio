@@ -12,6 +12,7 @@ export default function Scroll3DBackground() {
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
+          opacity: 'var(--bg-3d-opacity, 1)',
           background:
             'radial-gradient(circle at 50% 40%, rgba(0,255,255,0.04), rgba(255,0,255,0.03), transparent 80%)',
           filter: 'blur(80px) saturate(160%) brightness(45%)',

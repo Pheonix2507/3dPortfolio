@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 import ScrollReveal from '@/app/components/ScrollReveal';
 import ThreeDBack from '@/components/ui/Scroll3DBackground';
+import ParallaxReveal from './components/ParallaxReveal';
 
 const SceneCanvas = dynamic(() => import('@/app/components/SceneCanvas'), { ssr: false });
 const About = dynamic(() => import('@/app/about/page'), { ssr: false });
@@ -44,6 +45,12 @@ export default function Home() {
         <ScrollReveal delay={0.1}>
           <About />
         </ScrollReveal>
+
+        <ParallaxReveal
+  text="Welcome to my world of interactive 3D and motion."
+  focusIndex={0}           // zoom the first char 'W' (you can change)
+  revealThreshold={0.15}   // sooner/later reveal
+/>
       </section>
     </main>
   );

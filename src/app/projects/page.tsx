@@ -34,7 +34,7 @@ const projects = [
 export default function ProjectsContent() {
   return (
     <div className="pt-24 px-6 text-white space-y-10">
-      <h1 className="text-4xl font-bold">My Projects</h1>
+      {/* <h1 className="text-4xl font-bold">My Projects</h1> */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-15 place-items-center">
         {projects.map((project, index) => (
