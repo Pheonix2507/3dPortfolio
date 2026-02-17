@@ -3,13 +3,13 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
 // import { usePathname } from "next/navigation";
-import { Share_Tech_Mono } from 'next/font/google';
+import { Share_Tech_Mono } from "next/font/google";
 import ScrollController from "./components/ScrollController";
 
 const shareTechMono = Share_Tech_Mono({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-share-tech-mono',
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-share-tech-mono",
 });
 
 // const geistSans = Geist({
@@ -38,10 +38,9 @@ export default function RootLayout({
         className={`${shareTechMono.variable} ${shareTechMono.variable} mono-header antialiased`}
       >
         <ScrollController>
-
-      <Navbar />
-            {children}
-      </ScrollController>
+          <Navbar />
+          {children}
+        </ScrollController>
       </body>
     </html>
   );

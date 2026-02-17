@@ -58,7 +58,7 @@ export default function ParallaxReveal({
   }, [focusIndex, text.length]);
 
   return (
-    <section ref={ref}  className="relative min-h-[100vh] flex flex-col justify-center">
+    <section ref={ref}  className="relative min-h-fit flex flex-col justify-center mt-10">
       <div className="max-w-4xl mx-auto px-4">
         <div className="flex flex-col items-start gap-6">
           {/* Line with the hero char that zooms */}
