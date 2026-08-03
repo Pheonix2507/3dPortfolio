@@ -80,7 +80,7 @@ export default function ParallaxReveal({
                 zIndex: 40,
                 display: "inline-block",
               }}
-              className="text-cyan-300 drop-shadow-[0_6px_18px_rgba(0,255,255,0.08)]"
+              className="text-hazard"
               aria-hidden="true"
             >
               {focusChar}
@@ -94,7 +94,7 @@ export default function ParallaxReveal({
                 scale: restScale,
                 transformOrigin: "left center",
               }}
-              className="ml-3 text-lg text-white/90 md:text-2xl"
+              className="text-ink/90 ml-3 text-lg md:text-2xl"
             >
               {after}
             </motion.span>
@@ -103,12 +103,11 @@ export default function ParallaxReveal({
           {/* A subline or content that appears after the "transcend" */}
           <motion.div
             style={{ opacity: restOpacity, y: restY }}
-            className="mt-2 max-w-2xl text-white/70"
+            className="text-ink/60 mt-2 max-w-2xl font-mono text-sm leading-relaxed"
           >
             <p>
-              As you dive deeper the character zooms forward — revealing the
-              story beneath. This area can contain the next parts of the page
-              (projects, features, or a call-to-action).
+              Dive deeper and the character zooms forward, revealing the story
+              beneath it.
             </p>
           </motion.div>
 
@@ -121,11 +120,9 @@ export default function ParallaxReveal({
             }}
             className="mt-6 w-full"
           >
-            {/* Replace this with whatever you want to reveal */}
-            <div className="rounded-xl border border-white/6 bg-linear-to-r from-white/3 to-white/2 p-4">
-              <p className="text-sm text-white/80">
-                Revealed content area — you can render project links, previews,
-                or a short gallery here.
+            <div className="brut-edge-thin border-ink/25 bg-surface p-4">
+              <p className="text-ink/70 font-mono text-xs tracking-[0.15em] uppercase">
+                Scroll on for the playground
               </p>
             </div>
           </motion.div>

@@ -149,7 +149,7 @@ export default function ExplodingBox({
             <sphereGeometry args={[0.1, 16, 16]} />
             <meshStandardMaterial
               color={satelliteColor}
-              emissive="cyan"
+              emissive="#ffffff"
               emissiveIntensity={1}
             />
           </mesh>
@@ -166,11 +166,16 @@ export default function ExplodingBox({
 
       {exploded && (
         <Html center position={[position[0], position[1] + 2, position[2]]}>
+          {/* Glass earns its place here: it sits directly over a live scene. */}
           <div
             role="note"
             aria-label={name}
-            className="max-w-[300px] min-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-4 text-center font-sans text-white shadow-[0_4px_20px_rgba(0,0,0,0.4)] backdrop-blur-[10px]"
+            className="glass brut-edge-thin brut-shadow-sm border-hazard/80 text-ink w-[264px] p-4 text-center"
           >
+            <span
+              aria-hidden="true"
+              className="bg-hazard/40 mb-2 block h-px w-full"
+            />
             {infoContent}
           </div>
         </Html>

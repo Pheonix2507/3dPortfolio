@@ -28,7 +28,15 @@ const FRAGMENTS: Fragment[] = Array.from(
     y: (Math.random() - 0.5) * 10,
     z: (Math.random() - 0.5) * 10,
     size: Math.random() * 0.12 + 0.04,
-    color: new THREE.Color().setHSL(Math.random() * 0.3 + 0.6, 1, 0.45),
+    /*
+     * Monochrome field with one fragment in eight picked out in hazard yellow.
+     * The old version ran full-saturation hues across cyan to violet, which is
+     * a neon move and read as noise behind a yellow-on-black page.
+     */
+    color:
+      Math.random() < 0.125
+        ? new THREE.Color("#ffff00")
+        : new THREE.Color().setHSL(0, 0, 0.55 + Math.random() * 0.35),
   }),
 );
 
@@ -46,8 +54,8 @@ export default function Scroll3DBackground() {
         }}
       />
       <Canvas camera={{ position: [0, 0, 14], fov: 60 }}>
-        <color attach="background" args={["#01000a"]} />
-        <fog attach="fog" args={["#01000a", 10, 28]} />
+        <color attach="background" args={["#000000"]} />
+        <fog attach="fog" args={["#000000", 10, 28]} />
         <Suspense fallback={null}>
           <FragmentedCube />
         </Suspense>
@@ -95,8 +103,8 @@ function FragmentedCube() {
   return (
     <group ref={groupRef} position={[0, 0, -8]}>
       <ambientLight intensity={0.15} />
-      <pointLight position={[6, 6, 10]} intensity={1.2} color="#00ffff" />
-      <pointLight position={[-6, -6, -10]} intensity={0.7} color="#ff00ff" />
+      <pointLight position={[6, 6, 10]} intensity={1.2} color="#ffffff" />
+      <pointLight position={[-6, -6, -10]} intensity={0.7} color="#ffff00" />
 
       {FRAGMENTS.map((frag, i) => (
         <mesh
@@ -109,7 +117,7 @@ function FragmentedCube() {
             color={frag.color}
             metalness={0.75}
             roughness={0.3}
-            emissive="#00bfff"
+            emissive="#ffffff"
             emissiveIntensity={0.35}
             transparent
             opacity={0.55}

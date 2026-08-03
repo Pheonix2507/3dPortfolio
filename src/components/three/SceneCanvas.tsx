@@ -11,8 +11,8 @@ const CUBES = [
   {
     name: "Home",
     position: [-3, 0, -1] as [number, number, number],
-    color: "#ccff00",
-    satelliteColor: "cyan",
+    color: "#ffff00",
+    satelliteColor: "#ffff00",
     href: "/three-projects",
     heading: "Home",
     body: "Radhe Radhe!! This is my new project of 3D portFolio 😄",
@@ -20,20 +20,20 @@ const CUBES = [
   {
     name: "About Me",
     position: [3, 0, -1] as [number, number, number],
-    color: "#00ffff",
-    satelliteColor: "white",
+    color: "#ffffff",
+    satelliteColor: "#ffffff",
     href: "/about",
-    heading: "Chintu",
+    heading: "Chintan",
     body: "I'm a trainee developer working with ThreeJS, also a Frontend Dev 🙂‍↔",
   },
   {
     name: "Contact Me",
     position: [0, 0, 3] as [number, number, number],
-    color: "#7fff00",
-    satelliteColor: "yellow",
+    color: "#ff2200",
+    satelliteColor: "#ffffff",
     href: "/projects",
     heading: "Contact",
-    body: "Checkout my Instagram: WebDevChintuworks 😅! No promotions, just fun projects.",
+    body: "Open to frontend and 3D work. Reach me on any of the links in the About section.",
   },
 ];
 
@@ -42,13 +42,13 @@ export default function SceneCanvas() {
     <Suspense fallback={null}>
       <Canvas
         camera={{ position: [0, 0, 8], fov: 50 }}
-        className="flex items-center justify-center rounded-xl border-none"
+        className="flex items-center justify-center border-none"
         style={{
-          background: "linear-gradient(135deg, #191921, #0e0d1f, #0e0e1a)",
-          backgroundAttachment: "fixed",
+          // Flat black. The old blue-tinted gradient was the last soft edge in
+          // the scene chrome, and brutalism does not blend.
+          background: "#000000",
           margin: 0,
           overflow: "hidden",
-          color: "var(--foreground)",
         }}
         gl={{ preserveDrawingBuffer: true }}
       >
@@ -75,10 +75,12 @@ export default function SceneCanvas() {
             href={cube.href}
             infoContent={
               <>
-                <h3>
-                  <b>{cube.heading}</b>
+                <h3 className="font-display text-hazard text-sm tracking-[0.2em] uppercase">
+                  {cube.heading}
                 </h3>
-                <p>{cube.body}</p>
+                <p className="text-ink/75 mt-2 font-mono text-[11px] leading-relaxed">
+                  {cube.body}
+                </p>
               </>
             }
           />

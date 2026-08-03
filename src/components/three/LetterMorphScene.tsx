@@ -2,6 +2,7 @@
 
 import { Suspense, useMemo, useState } from "react";
 import * as THREE from "three";
+import { animated, useSpring } from "@react-spring/three";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { Gltf, OrbitControls, Stars } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
@@ -25,7 +26,7 @@ const FONT_SIZE = 3;
  */
 const FONT_URL = "/fonts/optimer_regular.typeface.json";
 const MORPH_SHAPES: ShapeType[] = ["box", "sphere", "cone", "torus"];
-const COLORS = ["cyan", "magenta", "lime", "orange", "violet"];
+const COLORS = ["#ffffff", "#ffff00"];
 const MORPH_SPRING = { mass: 1, tension: 120, friction: 18 };
 
 /** A loose cloud of points for the particles to rest in when not morphed. */
@@ -62,6 +63,69 @@ function sampleWordPoints(font: Font, word: string, wanted: number) {
   return points;
 }
 
+/**
+ * A latching push button, built as real geometry rather than a flat plane: a
+ * recessed housing with a cap that sinks into it and lights up while held down.
+ * The skeuomorphic control language from the DOM, carried into the scene.
+ */
+function PushButton({
+  pressed,
+  onPress,
+}: {
+  pressed: boolean;
+  onPress: () => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  const { capY } = useSpring({
+    capY: pressed ? -0.16 : 0,
+    config: { tension: 320, friction: 22 },
+  });
+
+  return (
+    <group position={[0, -4, 0]}>
+      {/* Housing the cap sinks into */}
+      <mesh position={[0, -0.14, 0]}>
+        <boxGeometry args={[3.5, 0.42, 1.95]} />
+        <meshStandardMaterial
+          color="#0e0e15"
+          metalness={0.55}
+          roughness={0.6}
+        />
+      </mesh>
+
+      {/* Bezel lip */}
+      <mesh position={[0, 0.04, 0]}>
+        <boxGeometry args={[3.24, 0.12, 1.72]} />
+        <meshStandardMaterial color="#05050a" metalness={0.4} roughness={0.8} />
+      </mesh>
+
+      {/* Cap */}
+      <animated.mesh
+        position-y={capY}
+        onClick={(event) => {
+          event.stopPropagation();
+          onPress();
+        }}
+        onPointerOver={(event) => {
+          event.stopPropagation();
+          setHovered(true);
+        }}
+        onPointerOut={() => setHovered(false)}
+      >
+        <boxGeometry args={[3, 0.34, 1.5]} />
+        <meshStandardMaterial
+          color={hovered ? "#f2f2f8" : "#d2d2de"}
+          metalness={0.35}
+          roughness={0.32}
+          emissive={pressed ? "#ffff00" : "#000000"}
+          emissiveIntensity={pressed ? 0.55 : 0}
+        />
+      </animated.mesh>
+    </group>
+  );
+}
+
 function MorphingScene() {
   const [morphed, setMorphed] = useState(false);
   // Suspends until the typeface is fetched; the Canvas boundary catches it.
@@ -95,15 +159,7 @@ function MorphingScene() {
         );
       })}
 
-      {/* The bar under the word: click to toggle between cloud and lettering. */}
-      <mesh position={[0, -4, 0]} onClick={() => setMorphed((on) => !on)}>
-        <boxGeometry args={[3, 0.3, 1.5]} />
-        <meshStandardMaterial
-          color="white"
-          emissive="white"
-          emissiveIntensity={0.4}
-        />
-      </mesh>
+      <PushButton pressed={morphed} onPress={() => setMorphed((on) => !on)} />
     </>
   );
 }
