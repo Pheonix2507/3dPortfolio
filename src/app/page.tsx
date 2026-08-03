@@ -1,66 +1,51 @@
-"use client";
-import dynamic from "next/dynamic";
-import ScrollReveal from "@/app/components/ScrollReveal";
-import ThreeDBack from "@/components/ui/Scroll3DBackground";
-import ParallaxReveal from "./components/ParallaxReveal";
+import ScrollReveal from "@/components/motion/ScrollReveal";
+import ParallaxReveal from "@/components/motion/ParallaxReveal";
+import Scroll3DBackground from "@/components/three/Scroll3DBackground";
+import HeroSection from "@/sections/HeroSection";
+import ProjectsSection from "@/sections/ProjectsSection";
+import AboutSection from "@/sections/AboutSection";
+import DynamicRotationSection from "@/sections/DynamicRotationSection";
 
-const SceneCanvas = dynamic(() => import("@/app/components/SceneCanvas"), {
-  ssr: false,
-});
-const About = dynamic(() => import("@/app/about/page"), { ssr: false });
-const Projects = dynamic(() => import("@/app/projects/page"), { ssr: false });
-const DynamicRotation = dynamic(() => import("@/app/dynamic-rotation/page"), { ssr: false });
-
+/**
+ * The landing page stitches the sections together. It stays a server component
+ * — each section opts into the client itself, so the page shell ships no JS.
+ */
 export default function Home() {
   return (
     <main className="min-h-screen text-white">
-      <ThreeDBack />
-      {/* Hero */}
+      <Scroll3DBackground />
+
       <section id="home" className="pt-20 text-center">
-        <span className="block p-5">Welcome to My Interactive 3D Page</span>
-        <div className="mx-auto lg:w-[70vw] lg:h-[70vh] w-[90vw] h-[50vh] border-5 outline-offset-4 border-white rounded-xl">
-          <SceneCanvas />
-        </div>
-        <span className="block mt-4 pt-5">
-          Click on the cubes to explore more! Use <i>Ctrl + scroll</i> or
-          Scrollpad to zoom out!!
-        </span>
+        <HeroSection />
       </section>
 
-      {/* Projects Section */}
       <section id="projects" className="pt-32">
         <ScrollReveal>
-          <h2 className="text-4xl font-bold text-center text-cyan-300 mb-10">
+          <h2 className="mb-10 text-center text-4xl font-bold text-cyan-300">
             My Projects
           </h2>
         </ScrollReveal>
 
         <ScrollReveal delay={0.1}>
-          <Projects />
+          <ProjectsSection />
         </ScrollReveal>
       </section>
 
-      {/* About Section */}
       <section id="about" className="pt-32">
-        {/* <ScrollReveal>
-          <h2 className="text-4xl font-bold text-center text-cyan-300 mb-10">
-            About Me
-          </h2>
-        </ScrollReveal> */}
-
         <ScrollReveal delay={0.1}>
-          <About />
+          <AboutSection />
         </ScrollReveal>
 
         <ParallaxReveal
           text="Welcome to my world of interactive 3D and motion."
-          focusIndex={0} // zoom the first char 'W' (you can change)
-          revealThreshold={0.15} // sooner/later reveal
+          focusIndex={0}
+          revealThreshold={0.15}
         />
       </section>
+
       <section id="dynamic-rotation" className="pt-32">
-      <ScrollReveal delay={0.1}>
-          <DynamicRotation />
+        <ScrollReveal delay={0.1}>
+          <DynamicRotationSection />
         </ScrollReveal>
       </section>
     </main>
