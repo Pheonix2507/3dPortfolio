@@ -1,0 +1,16 @@
+.next/
+out/
+build/
+node_modules/
+package-lock.json
+next-env.d.ts
+
+# `next build` rewrites this file with its own formatting (and forces
+# jsx: react-jsx). Leaving it to Prettier means the two fight on every build.
+tsconfig.json
+
+# Generated / binary assets
+public/scene.gltf
+public/scene.bin
+public/textures/
+public/hdr/

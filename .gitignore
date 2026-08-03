@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local AI tooling config — never publish to a public repo
+.claude/
+.cursor/
+CLAUDE.md
+
