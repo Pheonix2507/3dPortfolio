@@ -3,7 +3,43 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ---------------------------------------------------------------------------
+   Design language
+   ---------------------------------------------------------------------------
+   Three aesthetics, each with a defined job so they do not fight:
+
+   - Brutalism  structure. Hard borders, zero radius, solid offset shadows,
+                oversized display type. Everything laid out sits on this.
+   - Glass      the floating layer only: navbar, panels over a live WebGL
+                scene. Translucent fill, but it keeps the hard border so it
+                still reads as part of the same system.
+   - Skeuomorph things you touch: faders, switches, the project cards. Depth
+                earned by interaction, not sprinkled for decoration.
+
+   Palette: unmixed colour at maximum contrast, which is what brutalism
+   actually does. True black, pure white, and ONE accent rather than a spread
+   of neons. Yellow on black is the highest-contrast pairing available and
+   carries the industrial signage association the style wants. Nothing glows:
+   glow is a neon convention and it is the first thing that reads as un-brutal.
+--------------------------------------------------------------------------- */
+
 @theme inline {
+  --font-display: var(--font-archivo-black);
+  --font-mono: var(--font-share-tech-mono);
+
+  /* Base */
+  --color-void: #000000;
+  --color-surface: #0d0d0d;
+  --color-ink: #ffffff;
+
+  /* One accent, used everywhere. Red is rationed for genuine emphasis. */
+  --color-hazard: #ffff00;
+  --color-alert: #ff2200;
+
+  /* Border widths come from Tailwind v4's dynamic `border-<n>` scale:
+     border-3 for structural edges, border-2 for smaller controls. */
+
+  /* shadcn/ui bridge, kept so its primitives keep working */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -22,27 +58,10 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -61,19 +80,6 @@
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.705 0.015 286.067);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-primary: oklch(0.21 0.006 285.885);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.705 0.015 286.067);
 }
 
 .dark {
@@ -95,28 +101,22 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.552 0.016 285.938);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    /* Brutalism: nothing is rounded unless a utility opts in. */
+    border-radius: 0;
   }
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  ::selection {
+    background: var(--color-hazard);
+    color: var(--color-void);
   }
 }
 
@@ -125,32 +125,167 @@
   font-family: var(--font-share-tech-mono);
 }
 
-/* 3D parallax hover effect for the project cards. */
-.parallax-card {
-  --f: 0.05; /* smaller = gentler 3D */
-  --r: 16px; /* corner radius */
-  --_f: calc(100% * var(--f) / (1 + var(--f)));
-  --_a: calc(90deg * var(--f));
+/* --- Brutalism ----------------------------------------------------------- */
 
-  perspective: 800px;
-  width: 100%;
-  max-width: 350px;
-  transition:
-    transform 0.3s ease-out,
-    clip-path 0.5s ease;
+/**
+ * Structural edge. Sets width and style only, never colour, so it composes
+ * with any `border-*` colour utility without the two fighting over source
+ * order the way a `border:` shorthand would.
+ */
+@utility brut-edge {
+  border-width: 3px;
+  border-style: solid;
 }
 
-.parallax-card > .relative {
-  clip-path: inset(0 var(--_f) 0 0 round var(--r));
-  transform: perspective(600px) rotateY(var(--_a));
-  transition:
-    transform 0.6s ease,
-    clip-path 0.6s ease;
+@utility brut-edge-thin {
+  border-width: 2px;
+  border-style: solid;
 }
 
-.parallax-card:hover > .relative {
-  clip-path: inset(0 0 0 var(--_f) round var(--r));
-  transform: perspective(600px) translateX(calc(-1 * var(--_f)))
-    rotateY(calc(-1 * var(--_a)));
-  box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+/** Solid offset shadow, no blur. The signature brutalist move. */
+@utility brut-shadow {
+  box-shadow: 8px 8px 0 0 var(--color-ink);
 }
+
+@utility brut-shadow-sm {
+  box-shadow: 4px 4px 0 0 var(--color-ink);
+}
+
+@utility brut-shadow-hazard {
+  box-shadow: 8px 8px 0 0 var(--color-hazard);
+}
+
+/** Deeper offset, for the raised hover state. */
+@utility brut-shadow-lg {
+  box-shadow: 14px 14px 0 0 var(--color-hazard);
+}
+
+@utility brut-shadow-alert {
+  box-shadow: 8px 8px 0 0 var(--color-alert);
+}
+
+/** Collapses the offset so a surface can press into the page on interaction. */
+@utility brut-press {
+  transform: translate(8px, 8px);
+  box-shadow: 0 0 0 0 var(--color-ink);
+}
+
+/** Heavy rule used under section headings. */
+@utility brut-rule {
+  border-bottom: 3px solid var(--color-ink);
+}
+
+/* --- Glass --------------------------------------------------------------- */
+
+/**
+ * Translucent fill over the live WebGL backdrop. Keeps a hard border so it
+ * still belongs to the brutalist system, and carries a top inner highlight so
+ * the pane reads as glass rather than as flat transparency.
+ */
+@utility glass {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(14px) saturate(105%);
+  -webkit-backdrop-filter: blur(14px) saturate(105%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+@utility glass-light {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+}
+
+/* --- Skeuomorphism ------------------------------------------------------- */
+
+/**
+ * A physically raised surface: light gathers along the top edge, shade pools
+ * at the bottom, and the whole thing casts a real shadow.
+ */
+@utility skeuo-raised {
+  background: linear-gradient(180deg, #2b2b3d 0%, #16161f 55%, #0d0d14 100%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.28),
+    inset 0 -2px 3px 0 rgba(0, 0, 0, 0.65),
+    0 4px 0 0 #05050a,
+    0 6px 12px 0 rgba(0, 0, 0, 0.55);
+}
+
+/** The same surface, depressed. Pair with skeuo-raised on :active. */
+@utility skeuo-pressed {
+  background: linear-gradient(180deg, #0d0d14 0%, #16161f 45%, #23232f 100%);
+  box-shadow:
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.8),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.12),
+    0 1px 0 0 #05050a;
+  transform: translateY(3px);
+}
+
+/** A channel cut into the surface. Slider tracks, gauge wells. */
+@utility skeuo-inset {
+  background: linear-gradient(180deg, #05050a 0%, #101018 100%);
+  box-shadow:
+    inset 0 2px 5px 0 rgba(0, 0, 0, 0.9),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+/** Brushed-metal panel for the showpiece. Pure CSS, no image. */
+@utility skeuo-metal {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.045) 0px,
+      rgba(255, 255, 255, 0) 1px,
+      rgba(0, 0, 0, 0.05) 2px,
+      rgba(255, 255, 255, 0) 3px
+    ),
+    linear-gradient(160deg, #33333f 0%, #1c1c26 45%, #26262f 70%, #14141b 100%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.24),
+    inset 0 -3px 6px 0 rgba(0, 0, 0, 0.6),
+    0 8px 0 0 #05050a,
+    0 12px 24px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* --- Texture ------------------------------------------------------------- */
+
+/** Faint scanline wash. Ties the flat DOM chrome to the WebGL layer. */
+@utility scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.028) 0px,
+    rgba(255, 255, 255, 0.028) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/** Marquee for the ticker strips that separate sections. */
+@keyframes brut-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility marquee-track {
+  animation: brut-marquee 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/*
+ * The old .parallax-card effect lived here. Removed because its
+ * `clip-path: inset(...)` cropped 4.76% off each card's right edge, which cut
+ * the border and clipped the offset shadow away completely — clip-path clips
+ * box-shadow as well as content. Hover tilt now lives in the TiltCard
+ * component, done with transforms so borders and hard shadows survive.
+ */

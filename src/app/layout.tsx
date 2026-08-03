@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Share_Tech_Mono } from "next/font/google";
+import { Archivo_Black, Share_Tech_Mono } from "next/font/google";
+import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import ScrollController from "@/components/layout/ScrollController";
 import { siteConfig } from "@/data/site";
@@ -9,6 +10,17 @@ const shareTechMono = Share_Tech_Mono({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-share-tech-mono",
+});
+
+/**
+ * Share Tech Mono only ships weight 400, which is far too light to carry
+ * oversized brutalist headings. Archivo Black handles display type; the mono
+ * keeps the technical voice for body copy and labels.
+ */
+const archivoBlack = Archivo_Black({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-archivo-black",
 });
 
 export const metadata: Metadata = {
@@ -38,7 +50,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#01000a",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -50,10 +62,13 @@ export default function RootLayout({
     // The palette is dark-only by design; without this the shadcn light
     // variables win and routes without the 3D backdrop render white on white.
     <html lang="en" className="dark">
-      <body className={`${shareTechMono.variable} mono-header antialiased`}>
+      <body
+        className={`${shareTechMono.variable} ${archivoBlack.variable} mono-header bg-void scanlines antialiased`}
+      >
         <ScrollController>
           <Navbar />
           {children}
+          <Footer />
         </ScrollController>
       </body>
     </html>
