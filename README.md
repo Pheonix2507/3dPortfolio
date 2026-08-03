@@ -12,12 +12,15 @@ fragment field behind the whole page.
 | Language  | TypeScript, strict                                     |
 | 3D        | Three.js via React Three Fiber, drei, postprocessing   |
 | Animation | Framer Motion (DOM), React Spring (3D), Lenis (scroll) |
+| Runtime   | Node 24 (pinned via `engines.node`)                    |
 | Styling   | Tailwind CSS v4, hand-rolled design system             |
 | Tooling   | ESLint 9 flat config, Prettier with Tailwind plugin    |
 
 ## Getting started
 
-Requires Node 20.9 or newer.
+Requires Node 24. `engines.node` pins the major deliberately: an open-ended range
+lets the deploy platform jump to a brand new major the day it ships, which is a
+build break nobody asked for.
 
 ```bash
 npm install

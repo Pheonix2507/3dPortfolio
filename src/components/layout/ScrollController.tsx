@@ -1,11 +1,15 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
-import Lenis from "@studio-freight/lenis";
+import { useEffect, type ReactNode } from "react";
+import Lenis from "lenis";
 
 /**
- * ScrollController: Sets up smooth scrolling via Lenis
- * and syncs Framer Motion scroll-based animations smoothly.
+ * Sets up Lenis smooth scrolling for the whole document.
+ *
+ * `autoRaf` lets Lenis own its own animation frame loop, which `destroy()` then
+ * tears down. The previous hand-rolled loop re-scheduled itself on every frame
+ * but was never cancelled on cleanup, so it kept driving a destroyed Lenis
+ * instance for the lifetime of the page.
  */
 export default function ScrollController({
   children,
@@ -16,18 +20,10 @@ export default function ScrollController({
     const lenis = new Lenis({
       smoothWheel: true,
       lerp: 0.08,
+      autoRaf: true,
     });
 
-    const raf = (time: number) => {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    };
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
+    return () => lenis.destroy();
   }, []);
 
   return <>{children}</>;
