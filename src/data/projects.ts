@@ -1,7 +1,7 @@
 export interface Project {
   title: string;
   role: string;
-  /** Rendered as a comma-separated list; kept structured so it can become chips. */
+  /** Rendered as individual tags on the project cards. */
   tech: string[];
   description: string;
   link?: string;
@@ -9,40 +9,38 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    title: "🎉 Event Site for Synapse (DAIICT)",
-    role: "Frontend Developer",
+    title: "MBS Global",
+    role: "Lead Frontend Developer",
     tech: [
+      "Next.js",
       "React",
-      "Node.js",
-      "Tailwind CSS",
-      "GSAP",
       "TypeScript",
-      "AWS",
+      "Tailwind CSS",
+      "Strapi CMS",
       "Vercel",
     ],
     description:
-      "Implemented UI features dynamically based on ongoing feedback from the designer. Collaborated effectively with a cross-functional team to complete the site within 2 to 3 weeks.",
-    link: "https://www.synapse-daiict.co.in/",
+      "B2B corporate and lead-generation site for an enterprise workforce-services firm, built from scratch on the Next.js App Router. Custom Strapi REST client with request de-duplication, timeouts and tag-based caching, plus a secret-protected webhook that revalidates content on CMS edits without a redeploy. Around ten routes and 35 components.",
+    link: "https://www.mbsglobal.io/",
   },
   {
     title: "Vahaan Record Portal",
-    role: "Frontend Developer",
+    role: "Frontend Lead",
     tech: [
       "React",
+      "TypeScript",
       "Tailwind CSS",
       "shadcn/ui",
       "NestJS",
       "SQL",
-      "TypeScript",
       "Vercel",
-      "Render",
     ],
     description:
-      "Freelance project with one backend developer. Three-panel system for Superadmin, Employee, and Clients with forms, payments, and task management.",
+      "Multi-role B2B portal covering Admin, Employee and Client panels, owned end-to-end on the frontend alongside a NestJS and SQL backend collaborator. Role-based dashboards, data tables and forms built on a reusable component set.",
     link: "https://adviz-portal-fe.vercel.app/",
   },
   {
-    title: "Markencr - Startup Website",
+    title: "Markencr",
     role: "Primary Developer",
     tech: [
       "Next.js",
@@ -52,7 +50,7 @@ export const projects: Project[] = [
       "Vercel",
     ],
     description:
-      "Startup focused on UI design services. Built responsive UI from mockups and integrated TopMate for client communication.",
+      "Responsive marketing site for a design-services startup, built with their team and integrating TopMate for client communication.",
     link: "https://markencr-test.vercel.app/",
   },
 ];

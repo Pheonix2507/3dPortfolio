@@ -1,34 +1,72 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import BrutalBox from "@/components/ui/BrutalBox";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 // WebGL scenes cannot render on the server, so this only loads in the browser.
 const LetterMorphScene = dynamic(
   () => import("@/components/three/LetterMorphScene"),
-  { ssr: false },
+  {
+    ssr: false,
+    loading: () => (
+      <div className="bg-void flex h-full w-full items-center justify-center">
+        <span className="text-hazard/70 font-mono text-[11px] tracking-[0.3em] uppercase">
+          Loading particles…
+        </span>
+      </div>
+    ),
+  },
 );
 
 export default function ThreeProjectsSection() {
   return (
-    <div className="min-h-screen px-6 pt-24 text-center text-white">
-      <h1 className="mb-10 text-4xl font-bold">My 3D Projects</h1>
+    <div className="mx-auto w-full max-w-7xl px-4 pt-32 pb-8 lg:px-8 lg:pt-40">
+      <SectionHeading
+        index="05"
+        eyebrow="WebGL"
+        title="3D Projects"
+        meta="Scene experiments in React Three Fiber"
+      />
 
-      <section>
-        <h2 className="block p-5 text-white">Camera Scenematic</h2>
-        <div className="mx-auto h-[50vh] w-[90vw] rounded-xl border-4 border-white lg:h-[50vh] lg:w-[50vw]">
-          <LetterMorphScene />
+      <section className="mt-14">
+        <div className="relative">
+          <span className="bg-void text-hazard absolute -top-3 left-4 z-10 px-2 font-mono text-[10px] tracking-[0.3em] uppercase">
+            Scene_02 // Letter_Morph
+          </span>
+
+          <BrutalBox
+            accent="hazard"
+            surface="void"
+            className="h-[55vh] w-full overflow-hidden lg:h-[65vh]"
+          >
+            <LetterMorphScene />
+          </BrutalBox>
         </div>
-        <p className="mt-4 block p-5 text-white">
-          Click the bar under the particles to morph them into my name.
-        </p>
+
+        <div className="text-ink/45 mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] tracking-[0.15em] uppercase">
+          <span className="text-alert">◆</span>
+          <span>Press the button to morph the cloud into my name</span>
+          <span className="text-ink/20">|</span>
+          <span>Drag to orbit</span>
+        </div>
       </section>
 
-      <hr className="my-10 border-white/10" />
+      <section className="mt-24">
+        <div className="relative">
+          <span className="bg-void text-ink/40 absolute -top-3 left-4 z-10 px-2 font-mono text-[10px] tracking-[0.3em] uppercase">
+            Scene_04 // Reserved
+          </span>
 
-      <section>
-        <h2 className="block p-5 pt-10 text-white">Project 2</h2>
-        <div className="mx-auto flex h-[50vh] w-[90vw] items-center justify-center rounded-xl border-4 border-dashed border-white/30 lg:h-[50vh] lg:w-[50vw]">
-          <p className="text-white/50">Coming soon.</p>
+          <BrutalBox
+            accent="bare"
+            surface="none"
+            className="border-ink/25 flex h-[35vh] w-full items-center justify-center border-dashed"
+          >
+            <span className="text-ink/30 font-mono text-[11px] tracking-[0.3em] uppercase">
+              Coming soon
+            </span>
+          </BrutalBox>
         </div>
       </section>
     </div>

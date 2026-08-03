@@ -4,9 +4,13 @@
  */
 export const siteConfig = {
   name: "Chintan Bhara",
-  alias: "Ghost",
-  shortName: "Chintu's 3D Portfolio",
+  shortName: "Chintan Bhara",
   title: "Chintan Bhara — Interactive 3D Portfolio",
+  /**
+   * Stable link on this domain. The route redirects to RESUME_URL, so the PDF
+   * itself stays out of the repo and can be replaced without a deploy.
+   */
+  resumePath: "/resume",
   description:
     "Frontend and 3D developer building interactive web experiences with React Three Fiber, Framer Motion and Next.js.",
   keywords: [
@@ -24,6 +28,26 @@ export const siteConfig = {
    */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 } as const;
+
+/** Cycled on the split-flap status board in the about section. */
+export const statusPhrases = [
+  "BUILDING 3D WEB",
+  "OPEN TO WORK",
+  "SHIPPING MOTION",
+  "BASED IN INDIA",
+] as const;
+
+/** Scrolling ticker copy used between sections. */
+export const tickerItems = [
+  "React Three Fiber",
+  "WebGL",
+  "Next.js",
+  "TypeScript",
+  "Framer Motion",
+  "GLSL",
+  "Tailwind CSS",
+  "Motion Design",
+] as const;
 
 /** Sections on the landing page, in order. Drives the navbar. */
 export const navSections = [

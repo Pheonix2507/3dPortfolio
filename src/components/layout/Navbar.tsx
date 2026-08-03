@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { navSections, siteConfig } from "@/data/site";
+import { cn } from "@/lib/utils";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,57 +30,69 @@ export default function Navbar() {
   return (
     <nav
       aria-label="Main navigation"
-      className="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-black/30 backdrop-blur-md"
+      className="glass border-hazard/70 fixed top-0 left-0 z-50 w-full border-b-2"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between py-3 text-white">
+      <div className="mx-auto flex max-w-7xl items-stretch justify-between">
+        {/* Wordmark */}
         <button
           onClick={() => goToSection("home")}
-          className="pl-5 text-sm font-bold lg:pl-0 lg:text-3xl"
+          className="group border-hazard/30 hover:bg-hazard/10 flex items-center gap-3 border-r-2 px-4 py-3 transition-colors lg:px-6"
         >
-          {siteConfig.shortName}
+          <span className="bg-hazard text-void px-1.5 py-0.5 font-mono text-[10px] tracking-[0.2em] uppercase">
+            CB
+          </span>
+          <span className="font-display text-ink text-sm tracking-tight uppercase lg:text-xl">
+            {siteConfig.shortName}
+          </span>
         </button>
 
         {/* Desktop */}
-        <div className="hidden space-x-6 lg:flex">
-          {navSections.map((item) => (
-            <motion.button
+        <div className="hidden items-stretch lg:flex">
+          {navSections.map((item, index) => (
+            <button
               key={item.id}
               onClick={() => goToSection(item.id)}
-              whileHover={{ scale: 1.1 }}
-              className="group relative text-white/80 transition-colors duration-300 hover:text-cyan-400"
+              className="group border-hazard/20 text-ink/70 hover:bg-hazard hover:text-void relative flex items-center gap-2 border-l-2 px-6 font-mono text-xs tracking-[0.2em] uppercase transition-colors"
             >
+              <span className="text-hazard/70 group-hover:text-void text-[10px]">
+                {String(index + 1).padStart(2, "0")}
+              </span>
               {item.label}
-              <span className="absolute -bottom-1 left-0 h-[2px] w-full origin-left scale-x-0 rounded bg-cyan-400 transition-transform duration-300 group-hover:scale-x-100" />
-            </motion.button>
+            </button>
           ))}
         </div>
 
         {/* Mobile toggle */}
-        <div className="pr-5 lg:hidden">
-          <button
-            onClick={() => setIsOpen((open) => !open)}
-            aria-expanded={isOpen}
-            aria-controls="mobile-menu"
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-            className="focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none"
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-        </div>
+        <button
+          onClick={() => setIsOpen((open) => !open)}
+          aria-expanded={isOpen}
+          aria-controls="mobile-menu"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          className="border-hazard/30 text-ink hover:bg-hazard hover:text-void focus-visible:outline-hazard border-l-2 px-4 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 lg:hidden"
+        >
+          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
 
       {/* Mobile menu */}
       {isOpen && (
         <div
           id="mobile-menu"
-          className="absolute top-full left-0 w-full space-y-4 bg-black px-6 py-4 text-white backdrop-blur-md lg:hidden"
+          className="glass border-hazard/40 absolute top-full left-0 w-full border-t-2 lg:hidden"
         >
-          {navSections.map((item) => (
+          {navSections.map((item, index) => (
             <button
               key={item.id}
               onClick={() => goToSection(item.id)}
-              className="block w-full border-b border-white/10 px-1 py-2 text-left text-white/80 hover:text-cyan-400"
+              className={cn(
+                "border-ink/10 flex w-full items-center gap-3 border-b-2 px-5 py-4",
+                "text-ink/75 font-mono text-xs tracking-[0.2em] uppercase",
+                "hover:bg-hazard hover:text-void transition-colors",
+              )}
             >
+              <span className="text-hazard/70 text-[10px]">
+                {String(index + 1).padStart(2, "0")}
+              </span>
               {item.label}
             </button>
           ))}
