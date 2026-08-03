@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useScroll, useTransform } from 'framer-motion';
+import { useEffect } from "react";
+import { useScroll, useTransform } from "framer-motion";
 
 /**
  * useBackgroundFader:
@@ -13,7 +13,7 @@ import { useScroll, useTransform } from 'framer-motion';
  */
 export default function useBackgroundFader(
   targetRef: React.RefObject<HTMLElement | null>,
-  options: { start?: number; end?: number } = {}
+  options: { start?: number; end?: number } = {},
 ) {
   const start = options.start ?? 0;
   const end = options.end ?? 1;
@@ -21,7 +21,7 @@ export default function useBackgroundFader(
   // create a scroll tracker tied to the provided ref (hook must be called at top level)
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    offset: ['start end', 'end start'],
+    offset: ["start end", "end start"],
   });
 
   // map range [0..1] -> [1 .. 0] (fade out as progress grows)
@@ -31,18 +31,21 @@ export default function useBackgroundFader(
   useEffect(() => {
     // mapped is a MotionValue; subscribe to changes
     interface MotionValueLike {
-      on(event: 'change', callback: (v: number) => void): (() => void) | void;
+      on(event: "change", callback: (v: number) => void): (() => void) | void;
     }
 
     const mv = mapped as unknown as MotionValueLike;
-    const unsubscribe = mv.on('change', (v: number) => {
+    const unsubscribe = mv.on("change", (v: number) => {
       const clamped = Math.max(0, Math.min(1, v));
-      document.documentElement.style.setProperty('--bg-3d-opacity', String(clamped));
+      document.documentElement.style.setProperty(
+        "--bg-3d-opacity",
+        String(clamped),
+      );
     });
 
     return () => {
       try {
-        if (typeof unsubscribe === 'function') unsubscribe();
+        if (typeof unsubscribe === "function") unsubscribe();
       } catch {
         // noop
       }
