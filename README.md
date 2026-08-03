@@ -12,7 +12,7 @@ fragment field behind the whole page.
 | Language  | TypeScript, strict                                     |
 | 3D        | Three.js via React Three Fiber, drei, postprocessing   |
 | Animation | Framer Motion (DOM), React Spring (3D), Lenis (scroll) |
-| Styling   | Tailwind CSS v4, shadcn/ui primitives                  |
+| Styling   | Tailwind CSS v4, hand-rolled design system             |
 | Tooling   | ESLint 9 flat config, Prettier with Tailwind plugin    |
 
 ## Getting started
@@ -26,29 +26,61 @@ npm run dev
 
 The site runs at http://localhost:3000.
 
-For correct absolute URLs in Open Graph tags, set the deployed origin:
+Copy `.env.example` to `.env.local` and fill it in. Both keys are optional in
+development: `NEXT_PUBLIC_SITE_URL` falls back to `http://localhost:3000`, and
+`/resume` returns a 503 with an explanatory message rather than breaking.
 
-```bash
-# .env.local
-NEXT_PUBLIC_SITE_URL=https://your-domain.example
-```
+### The résumé is not in this repo
 
-It falls back to `http://localhost:3000`, so this is only needed in deployed
-environments.
+`/resume` is a dynamic route that reads `RESUME_URL` at request time and 307s to
+it. The PDF is deliberately never committed, and `public/*.pdf` is gitignored to
+keep it that way.
+
+The reason is that a résumé is updated often, git stores every revision of a
+binary in full, and PDFs do not delta-compress, so committing it would grow the
+repository permanently for no benefit.
+
+The PDF lives in Vercel Blob under a fixed pathname, so its public URL is stable
+across uploads.
+
+**One-time setup**
+
+1. Create a Blob store in the Vercel dashboard under **Storage**.
+2. Copy its read/write token into `.env.local` as `BLOB_READ_WRITE_TOKEN`, or run
+   `vercel env pull .env.local` on a linked project.
+3. Publish the PDF and copy the URL it prints:
+
+   ```bash
+   npm run resume:publish -- ~/Downloads/Chintan_Resume.pdf
+   ```
+
+4. Set that URL as `RESUME_URL` in `.env.local` and in the Vercel project's
+   environment variables.
+
+**Every update after that** is step 3 on its own. The pathname is fixed and the
+upload overwrites in place, so `RESUME_URL` never changes again.
+
+The running site never needs the Blob token — it only issues a redirect. The
+token is used solely by the publish script.
+
+Note that `cacheControlMaxAge` is set to five minutes on the upload. Blob's
+default TTL is long, which would leave the CDN serving the previous résumé for
+weeks after a replacement.
 
 ## Scripts
 
-| Script                 | Does                                      |
-| ---------------------- | ----------------------------------------- |
-| `npm run dev`          | Dev server with Turbopack                 |
-| `npm run build`        | Production build                          |
-| `npm start`            | Serve the production build                |
-| `npm run lint`         | ESLint                                    |
-| `npm run lint:fix`     | ESLint with autofix                       |
-| `npm run typecheck`    | `tsc --noEmit`                            |
-| `npm run format`       | Prettier write                            |
-| `npm run format:check` | Prettier check, no writes                 |
-| `npm run check`        | Typecheck, lint and format check together |
+| Script                            | Does                                      |
+| --------------------------------- | ----------------------------------------- |
+| `npm run dev`                     | Dev server with Turbopack                 |
+| `npm run build`                   | Production build                          |
+| `npm start`                       | Serve the production build                |
+| `npm run lint`                    | ESLint                                    |
+| `npm run lint:fix`                | ESLint with autofix                       |
+| `npm run typecheck`               | `tsc --noEmit`                            |
+| `npm run format`                  | Prettier write                            |
+| `npm run format:check`            | Prettier check, no writes                 |
+| `npm run check`                   | Typecheck, lint and format check together |
+| `npm run resume:publish -- <pdf>` | Upload a résumé PDF to Vercel Blob        |
 
 Run `npm run check` before opening a PR.
 
@@ -66,15 +98,81 @@ src/
 │   └── dynamic-rotation/
 ├── sections/             Page sections, reused by the landing page and routes
 ├── components/
-│   ├── layout/           Navbar, ScrollController
+│   ├── layout/           Navbar, Footer, ScrollController
 │   ├── motion/           Scroll and parallax reveal wrappers
 │   ├── three/            Every WebGL scene and 3D primitive
-│   └── ui/               shadcn/ui primitives only
+│   └── ui/               Design system primitives
 ├── hooks/                Reusable hooks
-├── data/                 Site config, projects, social links
+├── data/                 Site config, projects, social links, ticker copy
 ├── lib/                  Helpers (`cn`)
 └── types/                Shared types
 ```
+
+## Design language
+
+Three aesthetics, each given a defined job so they reinforce rather than fight
+each other. The whole vocabulary lives in `globals.css` as Tailwind v4 `@theme`
+tokens and `@utility` definitions, and nothing outside that file invents its own
+shadows or bevels.
+
+| Style        | Job                     | Where                                                    |
+| ------------ | ----------------------- | -------------------------------------------------------- |
+| Brutalism    | structure               | `brut-edge`, `brut-shadow*`, zero radius, oversized type |
+| Glass        | the floating layer only | `glass` on the navbar and panels sitting over live WebGL |
+| Skeuomorphic | things you touch        | `skeuo-raised`, `skeuo-inset`, `skeuo-metal` on controls |
+
+Glass is deliberately restricted to surfaces that overlay a moving 3D scene,
+which is the one place it reads as glass rather than as flat transparency. It
+still carries a hard border, so it stays inside the brutalist system.
+
+### Palette
+
+Unmixed colour at maximum contrast, which is what brutalism actually does.
+
+| Token     | Value     | Role                                            |
+| --------- | --------- | ----------------------------------------------- |
+| `void`    | `#000000` | Background. True black, not a tinted near-black |
+| `ink`     | `#ffffff` | Text, borders, default offset shadows           |
+| `hazard`  | `#ffff00` | The single accent, used throughout              |
+| `alert`   | `#ff2200` | Rationed for genuine emphasis only              |
+| `surface` | `#0d0d0d` | Card and panel fills                            |
+
+One accent rather than a spread of neons, because a spread dilutes it. Yellow on
+black is the highest-contrast pairing available and carries the industrial
+signage association the style wants.
+
+Nothing glows. Glow is a neon convention and it is the first thing that reads as
+un-brutal, so there are no halo shadows, no glowing text-shadows and no
+saturated bloom anywhere.
+
+The WebGL scenes are scored to the same palette — white and yellow particles
+against flat black, with red reserved for the orbit centre — so the canvases do
+not sit inside their frames looking like a different site.
+
+Primitives in `components/ui/` compose these: `BrutalBox`, `BrutalButton`,
+`SectionHeading`, `TechTag`, `Marquee`, `TiltCard`, `SkeuoSlider`,
+`SplitFlapBoard` and `AsciiPortrait`.
+
+A few are worth knowing about:
+
+- `SkeuoSlider` keeps a real `<input type="range">` invisible on top of its
+  decorative layers, so keyboard control, focus and screen-reader semantics come
+  from the platform rather than being reimplemented.
+- `SplitFlapBoard` is the mechanical centrepiece: departure-board cells that flip
+  on a `rotateX`, staggered across the row. Under `prefers-reduced-motion` it
+  settles on the first phrase and stops cycling, since auto-updating text is the
+  real problem, not just the animation.
+- `AsciiPortrait` samples an image onto an offscreen canvas and maps each cell's
+  luminance to a character. The canvas never reaches the DOM; the output is real
+  selectable text, sized with container query units so the fixed character grid
+  spans its parent exactly.
+- `TiltCard` rotates towards the pointer with transforms only. It replaced a
+  `clip-path` effect that cropped each card's right edge and clipped its offset
+  shadow out of existence.
+
+Type pairs Archivo Black for display with Share Tech Mono for body and labels.
+The mono only ships weight 400, which is far too light to carry headings at the
+sizes brutalism wants.
 
 ### Routes are not components
 
@@ -95,6 +193,12 @@ client component.
 spring-animated particle used by both the exploding cubes and the letter morph,
 so travel, tumble and material behaviour live in one place.
 
+`AxisSphere` is the playground scene: a ball spinning on a visible, tiltable
+axis inside two gimbal rings. Its surface is a hand-written GLSL shader rather
+than a standard material, so the colour dynamics stay inside the palette. Every
+edge in it — the terminator, the latitude bands, the ribs, the rim — is snapped
+with `step()` rather than `smoothstep()`, because the design does not blend.
+
 The typeface used by the letter morph is vendored into
 `public/fonts/optimer_regular.typeface.json` with its licence, because Three.js
 stopped shipping `examples/fonts` in the npm package at r185.
@@ -105,7 +209,11 @@ stopped shipping `examples/fonts` in the npm package at r185.
 - Import through the `@/` alias, not relative parent paths.
 - Scene tuning values (counts, radii, durations) are named constants at the top
   of the file, not inline magic numbers.
-- Prettier owns formatting. Do not hand-align code.
+- Shadows, bevels and borders come from the `@utility` definitions in
+  `globals.css`. Do not hand-roll a `box-shadow` in a component.
+- Border widths use `brut-edge` / `brut-edge-thin`, which set width and style
+  but never colour, so they compose with any `border-*` colour utility.
+- Prettier owns formatting, including Tailwind class order. Do not hand-align.
 
 ## Known follow-ups
 
@@ -113,5 +221,7 @@ stopped shipping `examples/fonts` in the npm package at r185.
   600 springs. Both would benefit from instanced rendering.
 - The satellite orbit in `ExplodingBox` uses `cos` for both x and y, so it
   tracks a diagonal rather than a circle. Left alone in case it is deliberate.
-- Project cards render the tech list as comma-separated text; the data is
-  already an array, so chips are a small change away.
+- `glass` relies on `backdrop-filter`. Browsers without it fall back to the
+  solid tint, which is legible but loses the effect.
+- No visual regression testing. Every check so far is typecheck, lint, build and
+  an HTTP status sweep, none of which can see a layout break.
