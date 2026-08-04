@@ -1,3 +1,5 @@
+import { resolveSiteUrl } from "@/lib/site-url";
+
 /**
  * Single source of truth for anything that describes the site itself.
  * Consumed by the root metadata and the navbar.
@@ -23,10 +25,22 @@ export const siteConfig = {
     "frontend developer",
   ],
   /**
-   * Set NEXT_PUBLIC_SITE_URL in the deploy environment so absolute URLs in
-   * Open Graph tags resolve correctly. Falls back to localhost in dev.
+   * Origin used for canonical, Open Graph, sitemap and robots URLs.
+   *
+   * Resolved in order so that a correct deployment needs no manual setup:
+   *
+   *   1. NEXT_PUBLIC_SITE_URL — explicit override, e.g. a custom domain that is
+   *      not yet the shortest one Vercel would pick.
+   *   2. VERCEL_PROJECT_PRODUCTION_URL — set automatically on Vercel at build
+   *      time, and always the production domain even on preview deployments, so
+   *      previews do not advertise themselves as canonical. Carries no protocol.
+   *   3. localhost, for development.
+   *
+   * Build and server only. Non-NEXT_PUBLIC variables are not exposed to the
+   * browser, so a client component reading this would see the localhost
+   * fallback. Nothing client-side uses it; keep it that way.
    */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: resolveSiteUrl(),
 } as const;
 
 /** Cycled on the split-flap status board in the about section. */
