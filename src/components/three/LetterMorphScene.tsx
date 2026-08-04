@@ -3,7 +3,8 @@
 import { Suspense, useMemo, useState } from "react";
 import * as THREE from "three";
 import { animated, useSpring } from "@react-spring/three";
-import { Canvas, useLoader } from "@react-three/fiber";
+import { useLoader } from "@react-three/fiber";
+import LazyCanvas from "@/components/three/LazyCanvas";
 import { Gltf, OrbitControls, Stars } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import {
@@ -11,6 +12,7 @@ import {
   type Font,
 } from "three/examples/jsm/loaders/FontLoader.js";
 import AnimatedShape from "@/components/three/AnimatedShape";
+import { sampleStep } from "@/lib/math";
 import type { ShapeType } from "@/types/three";
 
 /**
@@ -50,9 +52,9 @@ function sampleWordPoints(font: Font, word: string, wanted: number) {
   geometry.center();
 
   const position = geometry.getAttribute("position");
-  // Guard the step: a short word can yield fewer vertices than `wanted`, and a
-  // step of 0 would spin this loop forever.
-  const step = Math.max(1, Math.floor(position.count / wanted));
+  // sampleStep floors at 1. A short word can yield fewer vertices than `wanted`,
+  // and a step of 0 would spin this loop forever. Covered in lib/math.test.ts.
+  const step = sampleStep(position.count, wanted);
   const points: THREE.Vector3[] = [];
 
   for (let i = 0; i < position.count; i += step) {
@@ -128,7 +130,7 @@ function PushButton({
 
 function MorphingScene() {
   const [morphed, setMorphed] = useState(false);
-  // Suspends until the typeface is fetched; the Canvas boundary catches it.
+  // Suspends until the typeface is fetched; the Suspense boundary catches it.
   const font = useLoader(FontLoader, FONT_URL);
   const cloud = useMemo(() => randomCloud(PARTICLE_COUNT), []);
   const letters = useMemo(
@@ -170,12 +172,14 @@ function MorphingScene() {
  */
 export default function LetterMorphScene() {
   return (
-    <Canvas
+    <LazyCanvas
       camera={{ position: [0, 0, 12], fov: 60 }}
       className="rounded-xl border-none"
       gl={{ preserveDrawingBuffer: true }}
     >
-      <OrbitControls />
+      {/* Zoom off, matching the other scenes: fixed camera distance, and the
+          canvas no longer swallows wheel events meant for the page. */}
+      <OrbitControls enableZoom={false} />
       <Stars
         radius={250}
         depth={100}
@@ -193,6 +197,6 @@ export default function LetterMorphScene() {
       <EffectComposer>
         <Bloom intensity={0.6} />
       </EffectComposer>
-    </Canvas>
+    </LazyCanvas>
   );
 }

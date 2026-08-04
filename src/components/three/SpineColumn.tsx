@@ -5,6 +5,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Edges, Html } from "@react-three/drei";
 import type { MotionValue } from "framer-motion";
 import type * as THREE from "three";
+import { lerp, stagger } from "@/lib/math";
 
 interface SpineBlock {
   label: string;
@@ -86,9 +87,6 @@ const ROD_TOP = COLUMN_HEIGHT / 2 + BLOCK_HEIGHT;
 const ROD_BOTTOM = -COLUMN_HEIGHT / 2 - BLOCK_HEIGHT;
 const ROD_LENGTH = ROD_TOP - ROD_BOTTOM;
 
-const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
-const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
-
 interface SpineColumnProps {
   /** Scroll progress of the pinned section, 0 to 1. */
   progress: MotionValue<number>;
@@ -141,7 +139,7 @@ export default function SpineColumn({
     group.children.forEach((child, i) => {
       if (i >= COUNT) return;
 
-      const detached = clamp01((p - THRESHOLD[i]) / DETACH_WINDOW);
+      const detached = stagger(p, THRESHOLD[i], DETACH_WINDOW);
       totalDetached += detached;
 
       const angle = BASE_ANGLE[i] + elapsed.current * ORBIT_SPEED;
