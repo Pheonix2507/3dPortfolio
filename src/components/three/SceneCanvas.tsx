@@ -63,7 +63,12 @@ export default function SceneCanvas() {
         />
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
-        <OrbitControls />
+        {/*
+          Zoom is off: the camera distance stays fixed. This also stops the
+          canvas swallowing wheel events, so scrolling over the scene now scrolls
+          the page instead of dollying the camera. Rotate is still enabled.
+        */}
+        <OrbitControls enableZoom={false} />
 
         {CUBES.map((cube) => (
           <ExplodingBox

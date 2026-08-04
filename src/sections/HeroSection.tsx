@@ -112,8 +112,6 @@ export default function HeroSection() {
           <span>Click a cube to detonate it</span>
           <span className="text-ink/20">|</span>
           <span>Drag to orbit</span>
-          <span className="text-ink/20">|</span>
-          <span>Ctrl + scroll to zoom</span>
         </div>
       </div>
     </div>

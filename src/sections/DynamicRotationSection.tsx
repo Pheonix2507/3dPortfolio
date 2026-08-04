@@ -86,11 +86,12 @@ export default function DynamicRotationSection() {
           >
             <Canvas camera={{ position: [0, 0, 6.5], fov: 50 }}>
               <AxisSphere spin={spin} tilt={tilt} />
-              <OrbitControls
-                enablePan={false}
-                minDistance={4}
-                maxDistance={12}
-              />
+              {/*
+                Zoom off, so the camera distance is fixed and the canvas stops
+                swallowing wheel events. The min/max distance clamps went with
+                it: they only ever constrained zoom.
+              */}
+              <OrbitControls enableZoom={false} enablePan={false} />
             </Canvas>
           </BrutalBox>
         </div>
