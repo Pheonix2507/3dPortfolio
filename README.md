@@ -72,20 +72,23 @@ weeks after a replacement.
 
 ## Scripts
 
-| Script                            | Does                                      |
-| --------------------------------- | ----------------------------------------- |
-| `npm run dev`                     | Dev server with Turbopack                 |
-| `npm run build`                   | Production build                          |
-| `npm start`                       | Serve the production build                |
-| `npm run lint`                    | ESLint                                    |
-| `npm run lint:fix`                | ESLint with autofix                       |
-| `npm run typecheck`               | `tsc --noEmit`                            |
-| `npm run format`                  | Prettier write                            |
-| `npm run format:check`            | Prettier check, no writes                 |
-| `npm run check`                   | Typecheck, lint and format check together |
-| `npm run resume:publish -- <pdf>` | Upload a résumé PDF to Vercel Blob        |
+| Script                            | Does                                    |
+| --------------------------------- | --------------------------------------- |
+| `npm run dev`                     | Dev server with Turbopack               |
+| `npm run build`                   | Production build                        |
+| `npm start`                       | Serve the production build              |
+| `npm run lint`                    | ESLint                                  |
+| `npm run lint:fix`                | ESLint with autofix                     |
+| `npm run typecheck`               | `tsc --noEmit`                          |
+| `npm run format`                  | Prettier write                          |
+| `npm run format:check`            | Prettier check, no writes               |
+| `npm run test`                    | Vitest, once                            |
+| `npm run test:watch`              | Vitest, watching                        |
+| `npm run check`                   | Typecheck, lint, format check and tests |
+| `npm run resume:publish -- <pdf>` | Upload a résumé PDF to Vercel Blob      |
 
-Run `npm run check` before opening a PR.
+Run `npm run check` before opening a PR. CI runs the same steps plus the build on
+every push and PR to `main`.
 
 ## Project structure
 
@@ -95,19 +98,21 @@ src/
 │   ├── layout.tsx        Root layout, fonts, metadata, scroll controller
 │   ├── page.tsx          Landing page (server component)
 │   ├── globals.css       Tailwind entry, theme variables, custom effects
-│   ├── about/
-│   ├── projects/
-│   ├── three-projects/
-│   └── dynamic-rotation/
+│   ├── opengraph-image.tsx  Generated share card
+│   ├── sitemap.ts        Indexed routes
+│   ├── robots.ts         Crawl rules
+│   ├── not-found.tsx     404
+│   ├── resume/route.ts   Redirect to the hosted résumé
+│   ├── about/  projects/  three-projects/  dynamic-rotation/
 ├── sections/             Page sections, reused by the landing page and routes
 ├── components/
 │   ├── layout/           Navbar, Footer, ScrollController
-│   ├── motion/           Scroll and parallax reveal wrappers
+│   ├── motion/           ScrollReveal
 │   ├── three/            Every WebGL scene and 3D primitive
 │   └── ui/               Design system primitives
 ├── hooks/                Reusable hooks
 ├── data/                 Site config, projects, social links, ticker copy
-├── lib/                  Helpers (`cn`)
+├── lib/                  `cn`, plus the tested numeric helpers in `math.ts`
 └── types/                Shared types
 ```
 
@@ -218,13 +223,39 @@ stopped shipping `examples/fonts` in the npm package at r185.
   but never colour, so they compose with any `border-*` colour utility.
 - Prettier owns formatting, including Tailwind class order. Do not hand-align.
 
+### Rendering cost
+
+Three canvases sit on the landing page, so the render path is deliberately
+constrained:
+
+- `LazyCanvas` switches `frameloop` to `never` when a canvas scrolls out of view.
+  Without it every canvas keeps its own animation frame loop running forever, so
+  reading the footer still costs three scenes of GPU work per frame.
+- `Scroll3DBackground` draws its 400 fragments as a single `InstancedMesh`. It is
+  `position: fixed`, so it can never be paused for being off screen, which makes
+  it the one that most needed its draw calls collapsed.
+- Every scene checks `prefers-reduced-motion` and parks rather than animating.
+  Spring-driven pieces are placed instead of flown, so state still changes and
+  only the travel is dropped.
+
+### Testing
+
+Numeric helpers live in `src/lib/math.ts` specifically so they can be tested
+without a WebGL context, and `src/lib/math.test.ts` covers them. `sampleStep` has
+a regression test for a step-of-zero that once hung the tab, and `stagger` has
+one for the float boundary where `(0.6 - 0.5) / 0.1` is `0.9999999999999998`
+rather than `1`.
+
 ## Known follow-ups
 
-- `Scroll3DBackground` draws 400 individual meshes and `LetterMorphScene` runs
-  600 springs. Both would benefit from instanced rendering.
+- `LetterMorphScene` still runs 600 individual springs and draw calls. The
+  backdrop was instanced; this one was not, because each particle's spring is
+  driven independently and instancing it means rebuilding that animation.
 - The satellite orbit in `ExplodingBox` uses `cos` for both x and y, so it
   tracks a diagonal rather than a circle. Left alone in case it is deliberate.
 - `glass` relies on `backdrop-filter`. Browsers without it fall back to the
   solid tint, which is legible but loses the effect.
-- No visual regression testing. Every check so far is typecheck, lint, build and
-  an HTTP status sweep, none of which can see a layout break.
+- No visual regression testing. Everything verified so far is typecheck, lint,
+  unit tests, build and an HTTP sweep, none of which can see a layout break.
+- `NEXT_PUBLIC_SITE_URL` must be set in the deploy environment or the sitemap,
+  robots and Open Graph URLs all resolve to localhost.
