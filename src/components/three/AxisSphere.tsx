@@ -2,6 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useReducedMotion } from "framer-motion";
 import * as THREE from "three";
 
 const VERTEX_SHADER = /* glsl */ `
@@ -86,6 +87,7 @@ export default function AxisSphere({ spin, tilt }: AxisSphereProps) {
   const outerRing = useRef<THREE.Mesh>(null);
   const innerRing = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const reduceMotion = useReducedMotion() ?? false;
 
   // Initial values only. The clock is advanced through materialRef below,
   // because mutating a memoised object directly is not allowed.
@@ -101,6 +103,10 @@ export default function AxisSphere({ spin, tilt }: AxisSphereProps) {
   );
 
   useFrame((_, delta) => {
+    // Everything in this scene is decorative motion, so under reduced motion the
+    // sphere simply sits still at its tilt with the shader clock stopped.
+    if (reduceMotion) return;
+
     const material = materialRef.current;
     if (material) material.uniforms.uTime.value += delta;
 

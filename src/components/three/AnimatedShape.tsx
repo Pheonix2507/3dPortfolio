@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { animated, useSpring } from "@react-spring/three";
 import { useFrame } from "@react-three/fiber";
+import { useReducedMotion } from "framer-motion";
 import type * as THREE from "three";
 import type { ShapeType } from "@/types/three";
 
@@ -60,16 +61,20 @@ export default function AnimatedShape({
   springConfig = { mass: 1, tension: 140, friction: 16 },
 }: AnimatedShapeProps) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const reduceMotion = useReducedMotion() ?? false;
 
   const { position } = useSpring({
     from: { position: from.toArray() },
     to: { position: to.toArray() },
     delay,
     config: springConfig,
+    // Under reduced motion the piece is placed rather than flown, so the state
+    // change still happens and only the travel is dropped.
+    immediate: reduceMotion,
   });
 
   useFrame(() => {
-    if (!spin || !meshRef.current) return;
+    if (reduceMotion || !spin || !meshRef.current) return;
     meshRef.current.rotation.x += 0.01;
     meshRef.current.rotation.y += 0.01;
   });

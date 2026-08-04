@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
+import LazyCanvas from "@/components/three/LazyCanvas";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import ExplodingBox from "@/components/three/ExplodingBox";
@@ -40,7 +40,7 @@ const CUBES = [
 export default function SceneCanvas() {
   return (
     <Suspense fallback={null}>
-      <Canvas
+      <LazyCanvas
         camera={{ position: [0, 0, 8], fov: 50 }}
         className="flex items-center justify-center border-none"
         style={{
@@ -94,7 +94,7 @@ export default function SceneCanvas() {
         <EffectComposer>
           <Bloom intensity={1.5} luminanceThreshold={0.2} />
         </EffectComposer>
-      </Canvas>
+      </LazyCanvas>
     </Suspense>
   );
 }

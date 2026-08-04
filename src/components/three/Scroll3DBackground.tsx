@@ -1,8 +1,13 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Suspense, useRef } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import { Suspense, useEffect, useRef } from "react";
 import * as THREE from "three";
 
 const FRAGMENT_COUNT = 400;
@@ -64,40 +69,96 @@ export default function Scroll3DBackground() {
   );
 }
 
+/**
+ * One InstancedMesh rather than 400 separate ones.
+ *
+ * Each fragment used to be its own mesh with its own material, which is 400 draw
+ * calls every frame for a decorative backdrop that is on screen the entire time.
+ * Instancing collapses that to a single call, with per-instance transforms and
+ * colours uploaded once at mount.
+ *
+ * This is the one canvas that cannot be paused when off screen, because it is
+ * position:fixed and therefore never off screen, so it is the one that most
+ * needed the draw calls removed.
+ */
 function FragmentedCube() {
   const groupRef = useRef<THREE.Group>(null);
-  // Scratch vector reused each frame so the drift does not allocate.
-  const driftRef = useRef(new THREE.Vector3());
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+
+  // Scratch objects reused every frame so the drift never allocates.
+  const scratch = useRef({
+    matrix: new THREE.Matrix4(),
+    position: new THREE.Vector3(),
+    quaternion: new THREE.Quaternion(),
+    scale: new THREE.Vector3(),
+    euler: new THREE.Euler(),
+  });
+
+  /** Live positions, seeded from the fragment data and mutated by the drift. */
+  const positions = useRef(
+    FRAGMENTS.map((frag) => new THREE.Vector3(frag.x, frag.y, frag.z)),
+  );
+
+  const reduceMotion = useReducedMotion() ?? false;
   const { scrollYProgress } = useScroll();
 
   const spread = useTransform(scrollYProgress, [0, 1], [0, 1.5]);
   const rot = useTransform(scrollYProgress, [0, 1], [0, Math.PI * 2]);
   const explodeIntensity = useTransform(scrollYProgress, [0.8, 1], [0, 1]);
 
+  // Seed every instance's transform and colour once.
+  useEffect(() => {
+    const mesh = meshRef.current;
+    if (!mesh) return;
+
+    const { matrix, quaternion, scale, euler } = scratch.current;
+
+    FRAGMENTS.forEach((frag, i) => {
+      euler.set(frag.x, frag.y, frag.z);
+      quaternion.setFromEuler(euler);
+      scale.setScalar(frag.size);
+      matrix.compose(positions.current[i], quaternion, scale);
+      mesh.setMatrixAt(i, matrix);
+      mesh.setColorAt(i, frag.color);
+    });
+
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  }, []);
+
   useFrame(() => {
     const group = groupRef.current;
-    if (!group) return;
+    if (!group || reduceMotion) return;
 
     group.rotation.y = rot.get() * 0.4;
     group.rotation.x = rot.get() * 0.2;
 
-    const scale = 1 + spread.get() * 0.15;
-    group.scale.set(scale, scale, scale);
+    const scaleFactor = 1 + spread.get() * 0.15;
+    group.scale.setScalar(scaleFactor);
 
     // Fragments drift apart as the page bottoms out.
     const explode = explodeIntensity.get();
     if (explode <= 0) return;
 
-    const drift = driftRef.current;
-    for (const child of group.children) {
-      if (!(child instanceof THREE.Mesh)) continue;
-      drift.set(
-        (Math.random() - 0.5) * 0.015 * explode,
-        (Math.random() - 0.5) * 0.015 * explode,
-        (Math.random() - 0.5) * 0.015 * explode,
-      );
-      child.position.add(drift);
-    }
+    const mesh = meshRef.current;
+    if (!mesh) return;
+
+    const { matrix, quaternion, scale, euler } = scratch.current;
+
+    FRAGMENTS.forEach((frag, i) => {
+      const position = positions.current[i];
+      position.x += (Math.random() - 0.5) * 0.015 * explode;
+      position.y += (Math.random() - 0.5) * 0.015 * explode;
+      position.z += (Math.random() - 0.5) * 0.015 * explode;
+
+      euler.set(frag.x, frag.y, frag.z);
+      quaternion.setFromEuler(euler);
+      scale.setScalar(frag.size);
+      matrix.compose(position, quaternion, scale);
+      mesh.setMatrixAt(i, matrix);
+    });
+
+    mesh.instanceMatrix.needsUpdate = true;
   });
 
   return (
@@ -106,24 +167,22 @@ function FragmentedCube() {
       <pointLight position={[6, 6, 10]} intensity={1.2} color="#ffffff" />
       <pointLight position={[-6, -6, -10]} intensity={0.7} color="#ffff00" />
 
-      {FRAGMENTS.map((frag, i) => (
-        <mesh
-          key={i}
-          position={[frag.x, frag.y, frag.z]}
-          rotation={[frag.x, frag.y, frag.z]}
-        >
-          <boxGeometry args={[frag.size, frag.size, frag.size]} />
-          <meshStandardMaterial
-            color={frag.color}
-            metalness={0.75}
-            roughness={0.3}
-            emissive="#ffffff"
-            emissiveIntensity={0.35}
-            transparent
-            opacity={0.55}
-          />
-        </mesh>
-      ))}
+      <instancedMesh
+        ref={meshRef}
+        args={[undefined, undefined, FRAGMENT_COUNT]}
+        frustumCulled={false}
+      >
+        {/* Unit cube; per-instance scale carries each fragment's size. */}
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial
+          metalness={0.75}
+          roughness={0.3}
+          emissive="#ffffff"
+          emissiveIntensity={0.35}
+          transparent
+          opacity={0.55}
+        />
+      </instancedMesh>
     </group>
   );
 }

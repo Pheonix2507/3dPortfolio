@@ -10,6 +10,7 @@ import {
 import { useSpring } from "@react-spring/three";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { useReducedMotion } from "framer-motion";
 import { Html, Trail } from "@react-three/drei";
 import { useRouter } from "next/navigation";
 import AnimatedShape from "@/components/three/AnimatedShape";
@@ -76,6 +77,7 @@ export default function ExplodingBox({
   const angleRef = useRef(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router = useRouter();
+  const reduceMotion = useReducedMotion() ?? false;
 
   // Easing the orbit to a halt on hover, rather than stopping it dead.
   const { orbitSpeed } = useSpring({
@@ -93,7 +95,8 @@ export default function ExplodingBox({
 
   useFrame((_, delta) => {
     const orbit = orbitRef.current;
-    if (!orbit || exploded) return;
+    // The satellite's orbit is pure decoration, so it parks under reduced motion.
+    if (!orbit || exploded || reduceMotion) return;
 
     angleRef.current += delta * orbitSpeed.get();
     orbit.position.set(
