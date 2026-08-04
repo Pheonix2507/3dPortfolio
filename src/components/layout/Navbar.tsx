@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { navSections, siteConfig } from "@/data/site";
+import Link from "next/link";
+import { navRoutes, navSections, siteConfig } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 export default function Navbar() {
@@ -60,6 +61,17 @@ export default function Navbar() {
               {item.label}
             </button>
           ))}
+
+          {/* Real routes, so these are links rather than scroll handlers. */}
+          {navRoutes.map((route) => (
+            <Link
+              key={route.href}
+              href={route.href}
+              className="border-hazard/20 text-ink/70 hover:bg-hazard hover:text-void flex items-center border-l-2 px-6 font-mono text-xs tracking-[0.2em] uppercase transition-colors"
+            >
+              {route.label}
+            </Link>
+          ))}
         </div>
 
         {/* Mobile toggle */}
@@ -95,6 +107,17 @@ export default function Navbar() {
               </span>
               {item.label}
             </button>
+          ))}
+
+          {navRoutes.map((route) => (
+            <Link
+              key={route.href}
+              href={route.href}
+              onClick={() => setIsOpen(false)}
+              className="border-ink/10 text-ink/75 hover:bg-hazard hover:text-void flex w-full items-center border-b-2 px-5 py-4 font-mono text-xs tracking-[0.2em] uppercase transition-colors"
+            >
+              {route.label}
+            </Link>
           ))}
         </div>
       )}

@@ -51,24 +51,6 @@ export default function ThreeProjectsSection() {
           <span>Drag to orbit</span>
         </div>
       </section>
-
-      <section className="mt-24">
-        <div className="relative">
-          <span className="bg-void text-ink/40 absolute -top-3 left-4 z-10 px-2 font-mono text-[10px] tracking-[0.3em] uppercase">
-            Scene_04 // Reserved
-          </span>
-
-          <BrutalBox
-            accent="bare"
-            surface="none"
-            className="border-ink/25 flex h-[35vh] w-full items-center justify-center border-dashed"
-          >
-            <span className="text-ink/30 font-mono text-[11px] tracking-[0.3em] uppercase">
-              Coming soon
-            </span>
-          </BrutalBox>
-        </div>
-      </section>
     </div>
   );
 }

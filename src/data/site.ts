@@ -49,6 +49,15 @@ export const tickerItems = [
   "Motion Design",
 ] as const;
 
+/**
+ * Standalone routes, kept separate from the section anchors below because these
+ * navigate rather than scroll. Without this, /three-projects was reachable only
+ * by clicking a cube inside the hero WebGL scene.
+ */
+export const navRoutes = [
+  { href: "/three-projects", label: "Scenes" },
+] as const;
+
 /** Sections on the landing page, in order. Drives the navbar. */
 export const navSections = [
   { id: "home", label: "Home" },

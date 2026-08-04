@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { siteConfig } from "@/data/site";
+import { navRoutes, siteConfig } from "@/data/site";
 import { socialLinks } from "@/data/socials";
 
 export default function Footer() {
@@ -22,21 +22,37 @@ export default function Footer() {
             </Link>
           </div>
 
-          <ul className="flex flex-wrap gap-4">
-            {socialLinks.map(({ href, label, icon: Icon }) => (
-              <li key={label}>
-                <Link
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="brut-edge-thin border-ink/30 text-ink/60 hover:border-hazard hover:bg-hazard hover:text-void flex h-10 w-10 items-center justify-center transition-colors"
-                >
-                  <Icon className="h-4 w-4" />
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="flex flex-col items-start gap-5 md:items-end">
+            {/* Standalone routes, so they are reachable without the hero scene. */}
+            <ul className="flex flex-wrap gap-5 font-mono text-[10px] tracking-[0.25em] uppercase">
+              {navRoutes.map((route) => (
+                <li key={route.href}>
+                  <Link
+                    href={route.href}
+                    className="text-ink/50 hover:text-hazard decoration-hazard/50 underline decoration-2 underline-offset-4 transition-colors"
+                  >
+                    {route.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <ul className="flex flex-wrap gap-4">
+              {socialLinks.map(({ href, label, icon: Icon }) => (
+                <li key={label}>
+                  <Link
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="brut-edge-thin border-ink/30 text-ink/60 hover:border-hazard hover:bg-hazard hover:text-void flex h-10 w-10 items-center justify-center transition-colors"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <div className="border-ink/10 text-ink/30 mt-10 flex flex-col gap-2 border-t-2 pt-5 font-mono text-[10px] tracking-[0.25em] uppercase md:flex-row md:justify-between">

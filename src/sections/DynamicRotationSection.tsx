@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import LazyCanvas from "@/components/three/LazyCanvas";
 import { OrbitControls } from "@react-three/drei";
 import BrutalBox from "@/components/ui/BrutalBox";
 import SkeuoSlider from "@/components/ui/SkeuoSlider";
@@ -84,7 +84,7 @@ export default function DynamicRotationSection() {
             surface="void"
             className="h-[45vh] w-full overflow-hidden lg:h-[60vh]"
           >
-            <Canvas camera={{ position: [0, 0, 6.5], fov: 50 }}>
+            <LazyCanvas camera={{ position: [0, 0, 6.5], fov: 50 }}>
               <AxisSphere spin={spin} tilt={tilt} />
               {/*
                 Zoom off, so the camera distance is fixed and the canvas stops
@@ -92,7 +92,7 @@ export default function DynamicRotationSection() {
                 it: they only ever constrained zoom.
               */}
               <OrbitControls enableZoom={false} enablePan={false} />
-            </Canvas>
+            </LazyCanvas>
           </BrutalBox>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Canvas } from "@react-three/fiber";
+import LazyCanvas from "@/components/three/LazyCanvas";
 import { useReducedMotion, useScroll } from "framer-motion";
 import SpineColumn from "@/components/three/SpineColumn";
 import useBackgroundFader from "@/hooks/useBackgroundFader";
@@ -40,13 +40,13 @@ export default function PlaygroundIntro() {
           Further back and a narrower field of view than a close 40°, which was
           skewing the blocks into long slabs and pushing the column off frame.
         */}
-        <Canvas
+        <LazyCanvas
           camera={{ position: [0, 0, 10], fov: 38 }}
           dpr={[1, 1.5]}
           className="absolute inset-0"
         >
           <SpineColumn progress={scrollYProgress} reduceMotion={reduceMotion} />
-        </Canvas>
+        </LazyCanvas>
 
         {/*
           Chrome sits above the scene at z-20. The block labels are capped at
