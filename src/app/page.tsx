@@ -1,11 +1,11 @@
 import ScrollReveal from "@/components/motion/ScrollReveal";
-import ParallaxReveal from "@/components/motion/ParallaxReveal";
 import Scroll3DBackground from "@/components/three/Scroll3DBackground";
 import Marquee from "@/components/ui/Marquee";
 import SectionHeading from "@/components/ui/SectionHeading";
 import HeroSection from "@/sections/HeroSection";
 import ProjectsSection from "@/sections/ProjectsSection";
 import AboutSection from "@/sections/AboutSection";
+import PlaygroundIntro from "@/sections/PlaygroundIntro";
 import DynamicRotationSection from "@/sections/DynamicRotationSection";
 import { tickerItems } from "@/data/site";
 
@@ -60,15 +60,11 @@ export default function Home() {
             <AboutSection />
           </div>
         </ScrollReveal>
-
-        <ParallaxReveal
-          text="Welcome to my world of interactive 3D and motion."
-          focusIndex={0}
-          revealThreshold={0.15}
-        />
       </section>
 
       <Marquee items={tickerItems} className="mt-24" />
+
+      <PlaygroundIntro />
 
       <section id="dynamic-rotation" className="pt-24 lg:pt-32">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
