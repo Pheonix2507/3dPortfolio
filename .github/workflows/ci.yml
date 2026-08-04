@@ -17,9 +17,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # v4 of these actions bundles a Node 20 runtime, which the runners now warn
+      # about and force onto Node 24. v7 ships a Node 24 runtime natively.
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           # Matches engines.node, which is pinned so a new major cannot arrive
           # unannounced and break the build.
