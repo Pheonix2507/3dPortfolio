@@ -239,12 +239,12 @@ stopped shipping `examples/fonts` in the npm package at r185.
 
 ### Rendering cost
 
-Three canvases sit on the landing page, so the render path is deliberately
-constrained:
+Four canvases sit on the landing page — the fixed backdrop, the hero scene, the
+spine and the axis sphere — so the render path is deliberately constrained:
 
 - `LazyCanvas` switches `frameloop` to `never` when a canvas scrolls out of view.
   Without it every canvas keeps its own animation frame loop running forever, so
-  reading the footer still costs three scenes of GPU work per frame.
+  reading the footer still costs four scenes of GPU work per frame.
 - `Scroll3DBackground` draws its 400 fragments as a single `InstancedMesh`. It is
   `position: fixed`, so it can never be paused for being off screen, which makes
   it the one that most needed its draw calls collapsed.

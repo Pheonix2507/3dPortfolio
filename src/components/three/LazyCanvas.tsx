@@ -14,7 +14,7 @@ type LazyCanvasProps = Omit<ComponentProps<typeof Canvas>, "frameloop"> & {
  * A Canvas that only renders while it is on screen.
  *
  * Without this, every canvas on the page keeps its own animation frame loop
- * running forever, so scrolling to the footer still costs three scenes' worth of
+ * running forever, so scrolling to the footer still costs four scenes' worth of
  * GPU work per frame. Switching frameloop to "never" stops the loop and leaves
  * the last drawn frame in place, so scrolling back reveals no gap.
  *
