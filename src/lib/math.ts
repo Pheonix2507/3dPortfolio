@@ -17,22 +17,6 @@ export function lerp(from: number, to: number, t: number): number {
 }
 
 /**
- * Stride for sampling `wanted` items out of `count`.
- *
- * Guarded to at least 1. Without that guard, a source smaller than the target
- * yields Math.floor(count / wanted) === 0, and any `for (i += step)` loop using
- * it never terminates. That is a real bug this codebase shipped in the
- * letter-morph point sampler, hence the explicit floor and the tests around it.
- */
-export function sampleStep(count: number, wanted: number): number {
-  if (!Number.isFinite(count) || !Number.isFinite(wanted) || wanted <= 0) {
-    return 1;
-  }
-
-  return Math.max(1, Math.floor(count / wanted));
-}
-
-/**
  * Progress of a staggered item through its own window, as 0..1.
  *
  * Used by the spine to work out how far a given block is through detaching, from
