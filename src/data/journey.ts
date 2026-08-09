@@ -29,16 +29,16 @@ export const journeyStations: JourneyStation[] = [
   {
     index: "04",
     title: "Waste",
-    body: "waste = max(requested − used, 0), applied per row inside the sum. Applied to the aggregate instead, an under-requested container issues a credit against genuine waste elsewhere: one namespace reported zero memory waste while actually holding 50 GiB-hours.",
+    body: "waste = max(requested − used, 0), applied per row inside the sum, then split across ten dimensions. Applied to the aggregate instead, an under-requested container issues a credit against genuine waste elsewhere: one namespace reported zero memory waste while actually holding 50 GiB-hours.",
   },
   {
     index: "05",
     title: "Store",
-    body: "A partitioned Postgres star schema at container grain: normalised dimensions, an immutable fact table, monthly range partitions and idempotent upserts. Money is exact decimal end to end, never float.",
+    body: "A partitioned Postgres star schema at container grain: normalised dimensions, an immutable fact table, monthly range partitions and idempotent upserts. Money is exact decimal from database column to browser, never float. A nightly rollup compresses history 292x into immutable monthly statements.",
   },
   {
     index: "06",
     title: "Serve",
-    body: "A nightly rollup makes history cheap, an API serves it, and a Next.js dashboard reads it with the key held server-side. A Helm chart installs the whole thing into a cluster.",
+    body: "A versioned REST API with bearer auth, cursor pagination and rate limiting, and a Next.js dashboard typed from its OpenAPI spec. A Helm chart installs the whole thing with Prometheus alert rules, behind CI that refuses to go green on an untested database.",
   },
 ];

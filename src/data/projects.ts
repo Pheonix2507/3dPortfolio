@@ -32,11 +32,11 @@ export const projects: Project[] = [
       "Prometheus",
       "PostgreSQL",
       "Helm",
+      "Docker",
       "Next.js",
-      "TypeScript",
     ],
     description:
-      "Attributes Kubernetes spend to the teams and workloads that cause it. Clusters bill for what you reserve rather than what you use, so the waste is the gap between the two: a Go collector reads live topology through client-go informers and usage from Prometheus, then writes container-grain rows into a partitioned Postgres star schema with exact decimal money throughout. A Helm chart installs the collector, API and nightly rollup into a cluster, with a Next.js dashboard reading it behind a server-side API key.",
+      "Attributes Kubernetes spend to the teams and workloads that cause it. Clusters bill for what you reserve rather than what you use, so the waste is the gap between the two: client-go informers and PromQL feed a cost engine that splits spend and waste across ten dimensions, into a partitioned Postgres star schema with exact decimal money throughout. A nightly rollup compresses history 292x into immutable monthly statements, served by a versioned REST API with bearer auth, cursor pagination and rate limiting. Ships as a Helm chart with Prometheus alert rules and a Next.js dashboard typed from the OpenAPI spec.",
     link: "https://github.com/Pheonix2507/kubernetes-cost-analyzer",
   },
   {
