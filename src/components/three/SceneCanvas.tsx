@@ -24,7 +24,7 @@ const CUBES = [
     satelliteColor: "#ffffff",
     href: "/about",
     heading: "Chintan",
-    body: "I'm a trainee developer working with ThreeJS, also a Frontend Dev 🙂‍↔",
+    body: "Full stack developer. React and TypeScript up top, Go and Postgres underneath, Three.js for the fun bits 🙂‍↔",
   },
   {
     name: "Contact Me",
@@ -33,7 +33,7 @@ const CUBES = [
     satelliteColor: "#ffffff",
     href: "/projects",
     heading: "Contact",
-    body: "Open to frontend and 3D work. Reach me on any of the links in the About section.",
+    body: "Open to full stack and 3D work. Reach me on any of the links in the About section.",
   },
 ];
 

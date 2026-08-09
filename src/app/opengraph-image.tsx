@@ -92,7 +92,7 @@ export default function OpengraphImage() {
             display: "flex",
           }}
         >
-          Frontend &amp; 3D Engineer
+          Full Stack Developer
         </div>
       </div>
 
@@ -105,7 +105,7 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ color: "#777", fontSize: 24, letterSpacing: 3 }}>
-          REACT · NEXT.JS · TYPESCRIPT · WEBGL
+          REACT · NEXT.JS · TYPESCRIPT · GO · POSTGRES
         </div>
         <div style={{ display: "flex", gap: 10 }}>
           <div style={{ width: 28, height: 28, background: HAZARD }} />

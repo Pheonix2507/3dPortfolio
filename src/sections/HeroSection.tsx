@@ -42,8 +42,9 @@ export default function HeroSection() {
           <div className="brut-rule mt-6" />
 
           <p className="text-ink/60 mt-5 max-w-xl font-mono text-sm leading-relaxed">
-            I build things that move in three dimensions. Frontend, WebGL and
-            motion, put together so they feel physical rather than decorative.
+            Full stack, front to back: React and TypeScript at the surface, Go
+            and Postgres underneath, and WebGL when the interface should feel
+            physical rather than decorative.
           </p>
 
           <div className="mt-7 flex flex-wrap gap-4">
@@ -75,8 +76,8 @@ export default function HeroSection() {
           <BrutalBox accent="bare" surface="glass" className="p-5">
             <dl className="space-y-3 font-mono text-[11px] tracking-[0.15em] uppercase">
               {[
-                ["Role", "Frontend / 3D"],
-                ["Stack", "Next · R3F · TS"],
+                ["Role", "Full Stack"],
+                ["Stack", "Next · TS · Go"],
                 ["Based", "India"],
                 ["Status", "Open to work"],
               ].map(([key, value]) => (

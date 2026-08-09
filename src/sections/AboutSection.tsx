@@ -57,10 +57,11 @@ export default function AboutSection() {
           <div className="brut-rule mt-5" />
 
           <p className="text-ink/60 mt-6 max-w-2xl font-mono text-sm leading-relaxed">
-            Frontend-focused full stack developer working in React, Next.js and
-            TypeScript. I build design systems, data-dense dashboards and
-            production frontends, and I spend the rest of my time on interactive
-            3D that rewards poking at it.
+            Full stack developer working in React, Next.js and TypeScript, with
+            production Go, PostgreSQL and Kubernetes behind it. I build design
+            systems, data-dense dashboards that stay fast, and the services that
+            feed them, and I spend the rest of my time on interactive 3D that
+            rewards poking at it.
           </p>
 
           {/* Contact grid */}

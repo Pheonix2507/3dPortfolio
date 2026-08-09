@@ -14,15 +14,18 @@ export const siteConfig = {
    */
   resumePath: "/resume",
   description:
-    "Frontend and 3D developer building interactive web experiences with React Three Fiber, Framer Motion and Next.js.",
+    "Full stack developer specialising in React, Next.js and TypeScript, with production Go, PostgreSQL and Kubernetes behind it.",
   keywords: [
     "Chintan Bhara",
-    "3D portfolio",
-    "React Three Fiber",
+    "full stack developer",
+    "React",
     "Next.js",
-    "Framer Motion",
-    "creative developer",
-    "frontend developer",
+    "TypeScript",
+    "Go",
+    "Kubernetes",
+    "PostgreSQL",
+    "React Three Fiber",
+    "3D portfolio",
   ],
   /**
    * Origin used for canonical, Open Graph, sitemap and robots URLs.
@@ -53,14 +56,16 @@ export const statusPhrases = [
 
 /** Scrolling ticker copy used between sections. */
 export const tickerItems = [
-  "React Three Fiber",
-  "WebGL",
+  "React",
   "Next.js",
   "TypeScript",
-  "Framer Motion",
-  "GLSL",
+  "Go",
+  "PostgreSQL",
+  "Kubernetes",
+  "React Three Fiber",
+  "WebGL",
   "Tailwind CSS",
-  "Motion Design",
+  "GLSL",
 ] as const;
 
 /**

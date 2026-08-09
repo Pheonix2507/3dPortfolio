@@ -5,7 +5,7 @@ import AboutSection from "@/sections/AboutSection";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Chintan Bhara — frontend and 3D developer. Where to find me and what I build.",
+    "Chintan Bhara, full stack developer working across React, Next.js, Go and Kubernetes. Where to find me and what I build.",
 };
 
 export default function AboutPage() {
