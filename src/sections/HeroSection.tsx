@@ -34,7 +34,7 @@ export default function HeroSection() {
           </div>
 
           <h1 className="font-display text-ink mt-4 text-[clamp(2.75rem,11vw,8rem)] leading-[0.82] tracking-tighter uppercase">
-            Interactive
+            Full Stack
             <br />
             <span className="text-hazard">3D</span> Engineer
           </h1>

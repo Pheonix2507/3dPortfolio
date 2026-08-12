@@ -92,7 +92,7 @@ export default function OpengraphImage() {
             display: "flex",
           }}
         >
-          Full Stack Developer
+          Full Stack 3D Developer
         </div>
       </div>
 
